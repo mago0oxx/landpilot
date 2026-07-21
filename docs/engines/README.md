@@ -68,6 +68,24 @@ landpilot/
 
 ---
 
+
+
+# Intelligence Engines
+
+Each Intelligence Engine evaluates one specific dimension of a land investment.
+
+All engines operate independently and produce standardized outputs:
+
+- Score
+- Confidence
+- Risks
+- Findings
+
+The Decision Intelligence Engine combines all results into the final recommendation.
+
+
+-----
+
 ## 📚 Documentation
 
 Project documentation is located inside the `/docs` directory.
