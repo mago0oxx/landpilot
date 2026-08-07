@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { EMAIL_FROM, getResend } from "@/lib/email";
+import { passwordResetEmailHtml } from "@/lib/emailTemplates";
 import { generateResetToken, PASSWORD_RESET_TOKEN_TTL_MS } from "@/lib/passwordReset";
 import { prisma } from "@/lib/prisma";
 
@@ -39,7 +40,7 @@ export async function POST(request: NextRequest) {
         from: EMAIL_FROM,
         to: user.email,
         subject: "Reset your LandPilot password",
-        html: `<p>Someone requested a password reset for your LandPilot account.</p><p><a href="${resetUrl}">Reset your password</a></p><p>This link expires in 1 hour. If you didn't request this, you can ignore this email.</p>`,
+        html: passwordResetEmailHtml(resetUrl),
       });
     } else {
       // No RESEND_API_KEY configured yet — log the link so the flow is still testable locally.
