@@ -1,6 +1,7 @@
 "use client";
 
 import { signIn } from "next-auth/react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
 import Button from "@/components/ui/Button";
@@ -49,7 +50,15 @@ export default function LoginForm({ googleEnabled }: LoginFormProps) {
             onChange={(event) => setEmail(event.target.value)}
           />
         </FormField>
-        <FormField label="Password" htmlFor="password">
+        <FormField
+          label="Password"
+          htmlFor="password"
+          labelExtra={
+            <Link href="/forgot-password" className="text-xs font-medium text-lp-forest hover:underline">
+              Forgot password?
+            </Link>
+          }
+        >
           <TextInput
             id="password"
             type="password"

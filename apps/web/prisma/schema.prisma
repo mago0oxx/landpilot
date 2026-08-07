@@ -24,9 +24,10 @@ model User {
   stripeSubscriptionId   String?   @unique
   stripeCurrentPeriodEnd DateTime?
 
-  accounts   Account[]
-  sessions   Session[]
-  properties Property[]
+  accounts            Account[]
+  sessions            Session[]
+  properties          Property[]
+  passwordResetTokens PasswordResetToken[]
 }
 
 // Standard Auth.js / @auth/prisma-adapter shape — required by the adapter for OAuth account linking.
@@ -66,6 +67,21 @@ model VerificationToken {
   expires    DateTime
 
   @@unique([identifier, token])
+}
+
+// Only the sha256 hash of the token is stored — the raw token lives only in the emailed
+// link, so a DB leak alone can't be used to reset anyone's password.
+model PasswordResetToken {
+  id        String    @id @default(cuid())
+  tokenHash String    @unique
+  userId    String
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime  @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
 }
 
 model Property {
