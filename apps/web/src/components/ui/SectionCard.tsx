@@ -14,12 +14,12 @@ export default function SectionCard({
 }: SectionCardProps) {
   return (
     <Card>
-      <h2 className="text-2xl font-semibold">
+      <h2 className="text-2xl font-semibold text-lp-ink">
         {title}
       </h2>
 
       {description && (
-        <p className="mt-2 text-zinc-400">
+        <p className="mt-2 text-stone-500">
           {description}
         </p>
       )}

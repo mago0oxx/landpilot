@@ -1,0 +1,135 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String    @unique
+  emailVerified DateTime?
+  image         String?
+  // Null when the user only signs in via an OAuth provider (e.g. Google).
+  passwordHash  String?
+  createdAt     DateTime  @default(now())
+
+  // Billing (Stripe) — "free" | "pro". Free is capped at 3 analyses/month (see
+  // api/analyses/route.ts); Pro is unlimited. Always re-read from the DB, never trusted
+  // from the session JWT, since a webhook can change it mid-session.
+  plan                   String    @default("free")
+  stripeCustomerId       String?   @unique
+  stripeSubscriptionId   String?   @unique
+  stripeCurrentPeriodEnd DateTime?
+
+  accounts   Account[]
+  sessions   Session[]
+  properties Property[]
+}
+
+// Standard Auth.js / @auth/prisma-adapter shape — required by the adapter for OAuth account linking.
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+// Required by the Prisma adapter's interface even though this app doesn't use
+// email verification / magic links yet.
+model VerificationToken {
+  identifier String
+  token      String
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+model Property {
+  id          String   @id @default(cuid())
+  userId      String
+  address     String
+  county      String
+  state       String   @default("FL")
+  parcelId    String?
+  listingUrl  String?
+  lotSizeSqft Float
+  askingPrice Float
+  createdAt   DateTime @default(now())
+
+  // Whether the investor has committed to this land, not just analyzed it —
+  // distinguishes the Portfolio from the full analysis history.
+  inPortfolio      Boolean   @default(false)
+  portfolioAddedAt DateTime?
+
+  user     User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  analyses LandAnalysis[]
+
+  @@index([userId])
+  @@index([userId, inPortfolio])
+}
+
+model LandAnalysis {
+  id             String   @id @default(cuid())
+  propertyId     String
+  property       Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+
+  // Full LandAnalysisInput (all 8 section inputs) — kept as JSON because engine
+  // sub-weights are still refinable (docs/business/vision.md: "Continuous Improvement").
+  inputs Json
+
+  lpsScore         Float
+  // Estimated ROI (%), duplicated out of `inputs`/`engineResults` so the dashboard
+  // can aggregate it (avg/sum) without parsing JSON on every request.
+  estimatedRoi     Float
+  confidenceLevel  String
+  riskLevel        String
+  recommendation   String
+  explanation      String
+  // Per-engine breakdown (LPSResult["engines"]) for the analysis detail view.
+  engineResults    Json
+  // JSON string {summary, actionItems} from the AI narrative pass — null when
+  // ANTHROPIC_API_KEY isn't set or the call failed; UI hides the section either way.
+  aiSummary        String?  @db.Text
+  // Schema keys (e.g. "development.zoningAllowedUnits") filled by AI web research rather
+  // than real data or user input — drives the per-engine "AI researched" badge and the
+  // confidence cap (see aiResearch.ts). Empty array when the investor didn't opt in.
+  aiResearchedFields Json   @default("[]")
+
+  // "investment" | "residence" — what the investor is trying to decide (see
+  // scenarioComparator.ts). Drives whether `scenarios` is computed and which framing
+  // generateAiSummary uses.
+  intent    String @default("investment")
+  // ScenarioResult[] (types/scenario.ts) — the 7-way build/sell/rent comparison for this
+  // lot. Null when intent = "residence" (not relevant to a primary-residence buyer).
+  scenarios Json?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([propertyId])
+  @@index([createdAt])
+}

@@ -132,5 +132,19 @@ CTO
 July 2026
 
 ---
+| Engine                         |     Peso |
+| ------------------------------ | -------: |
+| 💰 Financial Intelligence      |  **250** |
+| 📍 Location Intelligence       |  **180** |
+| 🏗️ Development Intelligence   |  **180** |
+| 🌍 Environmental Intelligence  |  **120** |
+| 📈 Market Intelligence         |  **100** |
+| ⚖️ Legal Intelligence          |   **90** |
+| 🚧 Infrastructure Intelligence |   **80** |
+| **Total**                      | **1000** |
+
+
+
+
 
 > *"Invest Smarter. Build Bigger."*

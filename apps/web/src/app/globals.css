@@ -1,26 +1,29 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #ECEAE3;
+  --foreground: #1C1C1A;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+  --font-sans: var(--font-space-grotesk);
+  --font-mono: var(--font-jetbrains-mono);
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  /* LandPilot brand palette — cream/forest/gold, topographic land-survey identity */
+  --color-lp-cream: #ECEAE3;
+  --color-lp-ink: #1C1C1A;
+  --color-lp-forest: #1B3427;
+  --color-lp-forest-light: #3D6B4F;
+  --color-lp-mint: #A8D4BA;
+  --color-lp-gold: #C9943A;
+  --color-lp-gold-ink: #1B2A22;
+  --color-lp-border: rgba(26, 51, 38, 0.1);
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans), sans-serif;
 }

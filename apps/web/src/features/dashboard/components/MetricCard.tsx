@@ -14,21 +14,21 @@ export default function MetricCard({
   icon,
 }: MetricCardProps) {
   return (
-    <div className="rounded-2xl border border-zinc-800 bg-zinc-900 p-6 transition hover:border-green-500">
+    <div className="rounded-2xl border border-lp-border bg-white p-6 shadow-sm transition hover:border-lp-forest-light">
       <div className="flex items-center justify-between">
-        <span className="text-sm font-medium text-zinc-400">
+        <span className="text-sm font-medium text-stone-500">
           {title}
         </span>
 
         {icon}
       </div>
 
-      <h3 className="mt-4 text-3xl font-bold">
+      <h3 className="mt-4 font-mono text-3xl font-bold text-lp-ink">
         {value}
       </h3>
 
       {subtitle && (
-        <p className="mt-2 text-sm text-zinc-500">
+        <p className="mt-2 text-sm text-stone-400">
           {subtitle}
         </p>
       )}
