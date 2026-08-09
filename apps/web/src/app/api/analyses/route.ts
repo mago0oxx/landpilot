@@ -122,7 +122,9 @@ export async function POST(request: NextRequest) {
     },
   });
 
-  getPostHogServer()?.capture({
+  // Awaited — a fire-and-forget capture() can lose the event if Vercel freezes the
+  // function right after the response is sent, before the HTTP call to PostHog completes.
+  await getPostHogServer()?.captureImmediate({
     distinctId: session.user.id,
     event: "analysis_completed",
     properties: { intent, plan: plan.id, lpsScore: result.score, usedAiResearch: aiResearchedFields.length > 0 },

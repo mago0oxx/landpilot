@@ -35,7 +35,7 @@ export async function POST(request: NextRequest) {
         await applySubscriptionToUser(userId, subscription);
         const plan = planFromSubscription(subscription);
         if (plan) {
-          getPostHogServer()?.capture({ distinctId: userId, event: "subscription_started", properties: { plan } });
+          await getPostHogServer()?.captureImmediate({ distinctId: userId, event: "subscription_started", properties: { plan } });
         }
       }
       break;
@@ -68,7 +68,7 @@ export async function POST(request: NextRequest) {
         data: { plan: "free", stripeSubscriptionId: null, stripeCurrentPeriodEnd: null },
       });
       if (canceledUser) {
-        getPostHogServer()?.capture({ distinctId: canceledUser.id, event: "subscription_canceled" });
+        await getPostHogServer()?.captureImmediate({ distinctId: canceledUser.id, event: "subscription_canceled" });
       }
       break;
     }

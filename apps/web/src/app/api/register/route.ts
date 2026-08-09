@@ -31,7 +31,7 @@ export async function POST(request: NextRequest) {
   const passwordHash = await bcrypt.hash(password, 12);
   const user = await prisma.user.create({ data: { name, email, passwordHash } });
 
-  getPostHogServer()?.capture({ distinctId: user.id, event: "user_signed_up", properties: { method: "credentials" } });
+  await getPostHogServer()?.captureImmediate({ distinctId: user.id, event: "user_signed_up", properties: { method: "credentials" } });
 
   return NextResponse.json({ ok: true }, { status: 201 });
 }

@@ -46,7 +46,7 @@ export async function POST(request: NextRequest) {
       proration_behavior: "create_prorations",
     });
     await applySubscriptionToUser(user.id, updatedSubscription);
-    getPostHogServer()?.capture({ distinctId: user.id, event: "plan_upgraded", properties: { plan } });
+    await getPostHogServer()?.captureImmediate({ distinctId: user.id, event: "plan_upgraded", properties: { plan } });
 
     return NextResponse.json({ url: `${origin}/settings?checkout=success` });
   }
@@ -65,7 +65,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Could not start checkout." }, { status: 500 });
   }
 
-  getPostHogServer()?.capture({ distinctId: user.id, event: "checkout_started", properties: { plan } });
+  await getPostHogServer()?.captureImmediate({ distinctId: user.id, event: "checkout_started", properties: { plan } });
 
   return NextResponse.json({ url: checkoutSession.url });
 }

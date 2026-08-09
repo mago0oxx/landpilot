@@ -54,7 +54,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     // sign-up goes through /api/register directly and captures "user_signed_up" there.
     async createUser({ user }) {
       if (user.id) {
-        getPostHogServer()?.capture({ distinctId: user.id, event: "user_signed_up", properties: { method: "google" } });
+        await getPostHogServer()?.captureImmediate({ distinctId: user.id, event: "user_signed_up", properties: { method: "google" } });
       }
     },
   },
