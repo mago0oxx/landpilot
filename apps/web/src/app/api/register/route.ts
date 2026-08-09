@@ -1,6 +1,7 @@
 import bcrypt from "bcryptjs";
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
+import { getPostHogServer } from "@/lib/posthogServer";
 import { prisma } from "@/lib/prisma";
 
 const registerSchema = z.object({
@@ -28,7 +29,9 @@ export async function POST(request: NextRequest) {
   }
 
   const passwordHash = await bcrypt.hash(password, 12);
-  await prisma.user.create({ data: { name, email, passwordHash } });
+  const user = await prisma.user.create({ data: { name, email, passwordHash } });
+
+  getPostHogServer()?.capture({ distinctId: user.id, event: "user_signed_up", properties: { method: "credentials" } });
 
   return NextResponse.json({ ok: true }, { status: 201 });
 }

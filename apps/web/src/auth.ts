@@ -4,6 +4,7 @@ import NextAuth from "next-auth";
 import type { Provider } from "next-auth/providers";
 import Credentials from "next-auth/providers/credentials";
 import Google from "next-auth/providers/google";
+import { getPostHogServer } from "@/lib/posthogServer";
 import { prisma } from "@/lib/prisma";
 
 const providers: Provider[] = [
@@ -48,6 +49,15 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     signIn: "/login",
   },
   providers,
+  events: {
+    // Only fires for adapter-created users — i.e. OAuth sign-up (Google). Credentials
+    // sign-up goes through /api/register directly and captures "user_signed_up" there.
+    async createUser({ user }) {
+      if (user.id) {
+        getPostHogServer()?.capture({ distinctId: user.id, event: "user_signed_up", properties: { method: "google" } });
+      }
+    },
+  },
   callbacks: {
     async jwt({ token, user }) {
       if (user) token.id = user.id;

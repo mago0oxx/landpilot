@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
+import { getPostHogServer } from "@/lib/posthogServer";
 import { prisma } from "@/lib/prisma";
 import { getStripe } from "@/lib/stripe";
 import { applySubscriptionToUser, customerIdOf, periodEndFromSubscription, planFromSubscription } from "@/lib/stripeSync";
@@ -32,6 +33,10 @@ export async function POST(request: NextRequest) {
       if (userId && customerId && subscriptionId) {
         const subscription = await stripe.subscriptions.retrieve(subscriptionId);
         await applySubscriptionToUser(userId, subscription);
+        const plan = planFromSubscription(subscription);
+        if (plan) {
+          getPostHogServer()?.capture({ distinctId: userId, event: "subscription_started", properties: { plan } });
+        }
       }
       break;
     }
@@ -54,10 +59,17 @@ export async function POST(request: NextRequest) {
 
     case "customer.subscription.deleted": {
       const subscription = event.data.object as Stripe.Subscription;
+      const canceledUser = await prisma.user.findFirst({
+        where: { stripeCustomerId: customerIdOf(subscription.customer) },
+        select: { id: true },
+      });
       await prisma.user.updateMany({
         where: { stripeCustomerId: customerIdOf(subscription.customer) },
         data: { plan: "free", stripeSubscriptionId: null, stripeCurrentPeriodEnd: null },
       });
+      if (canceledUser) {
+        getPostHogServer()?.capture({ distinctId: canceledUser.id, event: "subscription_canceled" });
+      }
       break;
     }
   }

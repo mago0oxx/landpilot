@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Space_Grotesk, JetBrains_Mono } from "next/font/google";
 import { SessionProvider } from "next-auth/react";
+import PostHogProvider from "@/components/PostHogProvider";
 import "./globals.css";
 
 const spaceGrotesk = Space_Grotesk({
@@ -34,7 +35,9 @@ export default function RootLayout({
       className={`${spaceGrotesk.variable} ${jetbrainsMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-lp-cream text-lp-ink">
-        <SessionProvider>{children}</SessionProvider>
+        <SessionProvider>
+          <PostHogProvider>{children}</PostHogProvider>
+        </SessionProvider>
       </body>
     </html>
   );

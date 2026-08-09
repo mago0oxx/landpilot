@@ -7,6 +7,7 @@ import { buildKnownMap, mergeResearchedValues, researchMissingFields } from "@/f
 import { computeScenarios } from "@/features/analyze/services/scenarioComparator";
 import { auth } from "@/auth";
 import { isPlanId, PLANS } from "@/lib/plans";
+import { getPostHogServer } from "@/lib/posthogServer";
 import { prisma } from "@/lib/prisma";
 import { calculateLPS } from "@/utils/calculateLPS";
 import { calculateROI, roiInputsFromAnalysis } from "@/utils/calculateROI";
@@ -119,6 +120,12 @@ export async function POST(request: NextRequest) {
         },
       },
     },
+  });
+
+  getPostHogServer()?.capture({
+    distinctId: session.user.id,
+    event: "analysis_completed",
+    properties: { intent, plan: plan.id, lpsScore: result.score, usedAiResearch: aiResearchedFields.length > 0 },
   });
 
   return NextResponse.json({ id: analysis.id }, { status: 201 });
