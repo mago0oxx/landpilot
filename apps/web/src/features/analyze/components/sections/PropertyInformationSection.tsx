@@ -114,10 +114,35 @@ export default function PropertyInformationSection() {
         found.push("address");
       }
 
+      if (result.avgDaysOnMarket !== null && getValues("market.avgDaysOnMarket") === undefined) {
+        setValue("market.avgDaysOnMarket", result.avgDaysOnMarket, { shouldDirty: true });
+        found.push("days on market");
+      }
+
+      if (result.comparablePricePerSqft !== null && getValues("market.comparablePricePerSqft") === undefined) {
+        setValue("market.comparablePricePerSqft", result.comparablePricePerSqft, { shouldDirty: true });
+        found.push("price per sqft");
+      }
+
+      if (result.hoaRestrictions !== null && getValues("legal.hoaRestrictions") === undefined) {
+        setValue("legal.hoaRestrictions", result.hoaRestrictions, { shouldDirty: true });
+        found.push("HOA status");
+      }
+
+      if (result.waterSewerAvailable !== null && getValues("infrastructure.waterSewerAvailable") === undefined) {
+        setValue("infrastructure.waterSewerAvailable", result.waterSewerAvailable, { shouldDirty: true });
+        found.push("water/sewer access");
+      }
+
+      if (result.roadFrontage !== null && getValues("infrastructure.roadFrontage") === undefined) {
+        setValue("infrastructure.roadFrontage", result.roadFrontage, { shouldDirty: true });
+        found.push("road frontage");
+      }
+
       setExtractNote(
         found.length > 0
           ? `✓ Extracted: ${found.join(", ")}.`
-          : "Didn't find any new fields in that text — try pasting more of the listing (price, lot size)."
+          : "Didn't find any new fields in that text — try pasting more of the listing (price, lot size, days on market, HOA, utilities)."
       );
     } finally {
       setIsExtracting(false);

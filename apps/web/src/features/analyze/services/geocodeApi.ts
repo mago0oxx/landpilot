@@ -40,9 +40,23 @@ export interface ExtractedListingData {
   askingPrice: number | null;
   lotSizeSqft: number | null;
   address: string | null;
+  avgDaysOnMarket: number | null;
+  comparablePricePerSqft: number | null;
+  hoaRestrictions: boolean | null;
+  waterSewerAvailable: boolean | null;
+  roadFrontage: boolean | null;
 }
 
-const EMPTY_EXTRACTION: ExtractedListingData = { askingPrice: null, lotSizeSqft: null, address: null };
+const EMPTY_EXTRACTION: ExtractedListingData = {
+  askingPrice: null,
+  lotSizeSqft: null,
+  address: null,
+  avgDaysOnMarket: null,
+  comparablePricePerSqft: null,
+  hoaRestrictions: null,
+  waterSewerAvailable: null,
+  roadFrontage: null,
+};
 
 export async function extractListingData(text: string): Promise<ExtractedListingData> {
   try {
