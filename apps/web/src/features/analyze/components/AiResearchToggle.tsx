@@ -19,13 +19,13 @@ export default function AiResearchToggle({ checked, onChange }: AiResearchToggle
       <div>
         <div className="flex items-center gap-1.5">
           <Sparkles size={13} className="text-lp-gold" />
-          <span className="text-sm font-medium text-lp-ink">Dejar que la IA investigue los datos faltantes</span>
+          <span className="text-sm font-medium text-lp-ink">Let AI research the missing data</span>
         </div>
         <p className="mt-1 text-xs leading-relaxed text-stone-500">
-          Claude busca en la web densidad de zonificación, costo de construcción y tendencias de
-          mercado típicas de la zona — solo cifras regionales, nunca hechos legales o
-          ambientales de la parcela. La confianza del análisis queda limitada a &quot;Medium&quot;
-          cuando se usa, y cada motor afectado queda etiquetado.
+          Claude searches the web for typical zoning density, construction cost, and market
+          trends for the area — only regional figures, never legal or environmental facts
+          about the parcel. Analysis confidence is capped at &quot;Medium&quot; when used, and
+          each affected engine is labeled.
         </p>
       </div>
     </label>

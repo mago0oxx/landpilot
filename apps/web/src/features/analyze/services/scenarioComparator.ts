@@ -22,13 +22,13 @@ interface ScenarioDefinition {
 }
 
 const SCENARIO_DEFINITIONS: ScenarioDefinition[] = [
-  { id: "as-is", label: "Vender tal cual (sin construir)", units: 0, exitStrategy: null },
-  { id: "single-sell", label: "Casa unifamiliar — construir y vender", units: 1, exitStrategy: "sell" },
-  { id: "single-rent", label: "Casa unifamiliar — construir y alquilar", units: 1, exitStrategy: "rent" },
-  { id: "duplex-sell", label: "Dúplex — construir y vender", units: 2, exitStrategy: "sell" },
-  { id: "duplex-rent", label: "Dúplex — construir y alquilar", units: 2, exitStrategy: "rent" },
-  { id: "triplex-sell", label: "Tríplex — construir y vender", units: 3, exitStrategy: "sell" },
-  { id: "triplex-rent", label: "Tríplex — construir y alquilar", units: 3, exitStrategy: "rent" },
+  { id: "as-is", label: "Sell as-is (no construction)", units: 0, exitStrategy: null },
+  { id: "single-sell", label: "Single-family home — build and sell", units: 1, exitStrategy: "sell" },
+  { id: "single-rent", label: "Single-family home — build and rent", units: 1, exitStrategy: "rent" },
+  { id: "duplex-sell", label: "Duplex — build and sell", units: 2, exitStrategy: "sell" },
+  { id: "duplex-rent", label: "Duplex — build and rent", units: 2, exitStrategy: "rent" },
+  { id: "triplex-sell", label: "Triplex — build and sell", units: 3, exitStrategy: "sell" },
+  { id: "triplex-rent", label: "Triplex — build and rent", units: 3, exitStrategy: "rent" },
 ];
 
 /**
@@ -85,10 +85,10 @@ export function computeScenarios(input: LandAnalysisInput): ScenarioResult[] {
 function checkViability(units: number, maxAllowedUnits?: number): { viable: boolean; viabilityNote?: string } {
   if (units === 0) return { viable: true };
   if (maxAllowedUnits === undefined) {
-    return { viable: true, viabilityNote: "Densidad no verificada contra zonificación real — confirmá con el condado." };
+    return { viable: true, viabilityNote: "Density not verified against actual zoning — confirm with the county." };
   }
   if (units > maxAllowedUnits) {
-    return { viable: false, viabilityNote: `Excede la densidad permitida por zonificación (máximo ${maxAllowedUnits} unidad(es)).` };
+    return { viable: false, viabilityNote: `Exceeds the zoning-allowed density (max ${maxAllowedUnits} unit(s)).` };
   }
   return { viable: true };
 }

@@ -11,15 +11,15 @@ interface AnalyzingOverlayProps {
 }
 
 const BASE_STEPS = [
-  "Geocodificando la dirección",
-  "Consultando zona de inundación (FEMA)",
-  "Consultando registros de parcela del condado",
-  "Consultando crecimiento poblacional (Census)",
+  "Geocoding the address",
+  "Checking flood zone (FEMA)",
+  "Checking county parcel records",
+  "Checking population growth (Census)",
 ];
 
-const AI_STEP = "Investigando datos regionales con IA (búsqueda web)";
+const AI_STEP = "Researching regional data with AI (web search)";
 
-const FINAL_STEPS = ["Calculando el LPS Score", "Generando resumen de IA"];
+const FINAL_STEPS = ["Calculating the LPS Score", "Generating AI summary"];
 
 export default function AnalyzingOverlay({ address, aiResearchEnabled, done }: AnalyzingOverlayProps) {
   const steps = aiResearchEnabled ? [...BASE_STEPS, AI_STEP, ...FINAL_STEPS] : [...BASE_STEPS, ...FINAL_STEPS];
@@ -44,8 +44,8 @@ export default function AnalyzingOverlay({ address, aiResearchEnabled, done }: A
         <TopoPattern />
 
         <div className="relative z-10">
-          <p className="text-xs font-semibold tracking-wide text-lp-mint">ANALIZANDO TU PROPIEDAD</p>
-          <h2 className="mt-1 truncate text-lg font-semibold text-lp-cream">{address || "Propiedad"}</h2>
+          <p className="text-xs font-semibold tracking-wide text-lp-mint">ANALYZING YOUR PROPERTY</p>
+          <h2 className="mt-1 truncate text-lg font-semibold text-lp-cream">{address || "Property"}</h2>
 
           <div className="mt-5 h-1 w-full overflow-hidden rounded-full bg-white/10">
             <div

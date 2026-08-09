@@ -7,14 +7,14 @@ const OPTIONS = [
   {
     value: "investment" as const,
     icon: "🏗️",
-    title: "Inversión",
-    description: "Quiero maximizar el retorno — comparar qué construir y si conviene vender o alquilar.",
+    title: "Investment",
+    description: "I want to maximize returns — compare what to build and whether to sell or rent.",
   },
   {
     value: "residence" as const,
     icon: "🏡",
-    title: "Vivienda principal",
-    description: "Quiero saber si es un buen lugar para vivir — no me interesa el ROI.",
+    title: "Primary residence",
+    description: "I want to know if it's a good place to live — ROI doesn't matter to me.",
   },
 ];
 
@@ -24,7 +24,7 @@ export default function IntentSelector() {
 
   return (
     <div>
-      <p className="mb-3 text-sm font-medium text-lp-ink">¿Para qué buscás este terreno?</p>
+      <p className="mb-3 text-sm font-medium text-lp-ink">What are you looking for this land for?</p>
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
         {OPTIONS.map((option) => {
           const selected = intent === option.value;

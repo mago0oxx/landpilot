@@ -25,7 +25,7 @@ export default function EngineCard({ engine, aiResearched, onClick }: EngineCard
       {aiResearched && (
         <span
           className="absolute top-2 right-2 rounded-full bg-lp-gold/15 px-1.5 py-0.5 text-[8px] font-bold tracking-wide text-lp-gold"
-          title="Incluye datos investigados por IA (búsqueda web)"
+          title="Includes AI-researched data (web search)"
         >
           IA
         </span>

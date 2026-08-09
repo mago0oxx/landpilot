@@ -76,11 +76,11 @@ export default function AnalyzeForm({ plan }: AnalyzeFormProps) {
           <div className="flex items-start gap-3 rounded-xl border border-lp-border bg-stone-50 p-4">
             <Sparkles size={16} className="mt-0.5 shrink-0 text-stone-400" />
             <div>
-              <p className="text-sm font-medium text-lp-ink">Investigación con IA y comparador de estrategias</p>
+              <p className="text-sm font-medium text-lp-ink">AI research and strategy comparison</p>
               <p className="mt-1 text-xs leading-relaxed text-stone-500">
-                Disponibles en el plan Pro.{" "}
+                Available on the Pro plan.{" "}
                 <Link href="/pricing" className="font-medium text-lp-forest-light underline">
-                  Ver planes
+                  View plans
                 </Link>
               </p>
             </div>

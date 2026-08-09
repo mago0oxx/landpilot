@@ -137,7 +137,7 @@ export default function AnalysisResult({
             </div>
             {aiResearchedEngines.size > 0 && (
               <p className="text-[10.5px] text-lp-gold">
-                Incluye datos investigados por IA — la confianza no supera &quot;Medium&quot;.
+                Includes AI-researched data — confidence is capped at &quot;Medium&quot;.
               </p>
             )}
             <div className="flex items-center justify-between">
