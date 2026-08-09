@@ -3,6 +3,7 @@ import AnalysisResult from "@/features/analyze/components/AnalysisResult";
 import { LPSResult } from "@/features/analyze/types/scoring";
 import { ScenarioResult } from "@/features/analyze/types/scenario";
 import { auth } from "@/auth";
+import { isPlanId, PLANS } from "@/lib/plans";
 import { prisma } from "@/lib/prisma";
 
 interface AnalysisPageProps {
@@ -27,6 +28,9 @@ export default async function AnalysisPage({ params }: AnalysisPageProps) {
     notFound();
   }
 
+  const dbUser = await prisma.user.findUnique({ where: { id: session!.user!.id! }, select: { plan: true } });
+  const plan = PLANS[isPlanId(dbUser?.plan ?? "") ? (dbUser!.plan as keyof typeof PLANS) : "free"];
+
   const result: LPSResult = {
     score: analysis.lpsScore,
     confidenceLevel: analysis.confidenceLevel as LPSResult["confidenceLevel"],
@@ -44,6 +48,7 @@ export default async function AnalysisPage({ params }: AnalysisPageProps) {
       aiResearchedFields={analysis.aiResearchedFields as string[]}
       scenarios={analysis.scenarios as unknown as ScenarioResult[] | null}
       inPortfolio={analysis.property.inPortfolio}
+      canUsePortfolio={plan.hasPortfolio}
       property={{
         address: analysis.property.address,
         county: analysis.property.county,

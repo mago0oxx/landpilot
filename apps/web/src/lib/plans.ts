@@ -16,6 +16,7 @@ export interface PlanConfig {
   features: string[];
   hasScenarioComparison: boolean;
   hasAiResearch: boolean;
+  hasPortfolio: boolean;
   recommended?: boolean;
 }
 
@@ -28,6 +29,7 @@ export const PLANS: Record<PlanId, PlanConfig> = {
     features: ["3 analyses per month", "All 7 Intelligence Engines", "Real government data sources", "AI-generated summary"],
     hasScenarioComparison: false,
     hasAiResearch: false,
+    hasPortfolio: false,
   },
   starter: {
     id: "starter",
@@ -37,6 +39,7 @@ export const PLANS: Record<PlanId, PlanConfig> = {
     features: ["15 analyses per month", "Everything in Free", "More room to compare properties"],
     hasScenarioComparison: false,
     hasAiResearch: false,
+    hasPortfolio: false,
   },
   pro: {
     id: "pro",
@@ -46,6 +49,7 @@ export const PLANS: Record<PlanId, PlanConfig> = {
     features: ["Unlimited analyses", "Everything in Starter", "Strategy comparison (build/sell/rent)", "AI market research", "Portfolio tracking"],
     hasScenarioComparison: true,
     hasAiResearch: true,
+    hasPortfolio: true,
     recommended: true,
   },
 };

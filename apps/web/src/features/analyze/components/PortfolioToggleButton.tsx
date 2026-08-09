@@ -1,6 +1,7 @@
 "use client";
 
-import { Bookmark, BookmarkCheck } from "lucide-react";
+import { Bookmark, BookmarkCheck, Lock } from "lucide-react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { setAnalysisPortfolio } from "../services/analysisApi";
@@ -8,12 +9,24 @@ import { setAnalysisPortfolio } from "../services/analysisApi";
 interface PortfolioToggleButtonProps {
   analysisId: string;
   initialInPortfolio: boolean;
+  canUsePortfolio: boolean;
 }
 
-export default function PortfolioToggleButton({ analysisId, initialInPortfolio }: PortfolioToggleButtonProps) {
+export default function PortfolioToggleButton({ analysisId, initialInPortfolio, canUsePortfolio }: PortfolioToggleButtonProps) {
   const router = useRouter();
   const [inPortfolio, setInPortfolio] = useState(initialInPortfolio);
   const [isSaving, setIsSaving] = useState(false);
+
+  if (!canUsePortfolio) {
+    return (
+      <Link
+        href="/pricing"
+        className="inline-flex items-center gap-2 rounded-xl border border-lp-border px-5 py-3 text-sm font-medium text-stone-500 transition hover:border-lp-forest/50"
+      >
+        <Lock size={16} /> Portfolio tracking is Pro
+      </Link>
+    );
+  }
 
   async function handleToggle() {
     const next = !inPortfolio;

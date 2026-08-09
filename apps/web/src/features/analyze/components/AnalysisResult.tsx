@@ -55,6 +55,7 @@ interface AnalysisResultProps {
   scenarios?: ScenarioResult[] | null;
   property: AnalysisResultProperty;
   inPortfolio: boolean;
+  canUsePortfolio: boolean;
 }
 
 function parseAiSummary(raw?: string | null): ParsedAiSummary | null {
@@ -76,6 +77,7 @@ export default function AnalysisResult({
   scenarios,
   property,
   inPortfolio,
+  canUsePortfolio,
 }: AnalysisResultProps) {
   const avgConfidencePercent = Math.round(
     result.engines.reduce((sum, engine) => sum + engine.confidencePercent, 0) / result.engines.length
@@ -117,7 +119,7 @@ export default function AnalysisResult({
         </div>
 
         <div className="flex justify-end gap-2 px-6 pt-6">
-          <PortfolioToggleButton analysisId={analysisId} initialInPortfolio={inPortfolio} />
+          <PortfolioToggleButton analysisId={analysisId} initialInPortfolio={inPortfolio} canUsePortfolio={canUsePortfolio} />
           <DeleteAnalysisButton analysisId={analysisId} redirectTo="/dashboard" />
         </div>
 

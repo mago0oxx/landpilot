@@ -1,7 +1,9 @@
-import { Landmark, MapPinned, Star, TrendingUp } from "lucide-react";
+import { Landmark, Lock, MapPinned, Star, TrendingUp } from "lucide-react";
+import Link from "next/link";
 import RecentAnalyses from "@/features/dashboard/components/RecentAnalyses";
 import MetricCard from "@/features/dashboard/components/MetricCard";
 import { auth } from "@/auth";
+import { isPlanId, PLANS } from "@/lib/plans";
 import { prisma } from "@/lib/prisma";
 
 // Always reflects the latest portfolio state — never statically prerendered.
@@ -10,6 +12,27 @@ export const dynamic = "force-dynamic";
 export default async function PortfolioPage() {
   const session = await auth();
   const userId = session!.user!.id!;
+
+  const dbUser = await prisma.user.findUnique({ where: { id: userId }, select: { plan: true } });
+  const plan = PLANS[isPlanId(dbUser?.plan ?? "") ? (dbUser!.plan as keyof typeof PLANS) : "free"];
+
+  if (!plan.hasPortfolio) {
+    return (
+      <div className="rounded-3xl border border-dashed border-lp-forest/25 bg-white/60 p-12 text-center">
+        <Lock className="mx-auto text-stone-400" size={28} />
+        <p className="mt-4 text-lg font-medium text-lp-ink">Portfolio tracking is a Pro feature</p>
+        <p className="mx-auto mt-2 max-w-md text-sm text-stone-500">
+          Track committed investments, their combined value, and average ROI/LPS across your holdings.
+        </p>
+        <Link
+          href="/pricing"
+          className="mt-6 inline-flex items-center justify-center rounded-xl bg-lp-gold px-5 py-3 text-sm font-medium text-lp-gold-ink transition hover:brightness-105"
+        >
+          Upgrade to Pro
+        </Link>
+      </div>
+    );
+  }
 
   const [analyses, aggregates] = await Promise.all([
     prisma.landAnalysis.findMany({

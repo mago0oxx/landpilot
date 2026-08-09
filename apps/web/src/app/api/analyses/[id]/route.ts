@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/auth";
+import { isPlanId, PLANS } from "@/lib/plans";
 import { prisma } from "@/lib/prisma";
 
 export async function GET(_request: Request, { params }: { params: Promise<{ id: string }> }) {
@@ -32,6 +33,19 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
   const body = await request.json();
   if (typeof body?.inPortfolio !== "boolean") {
     return NextResponse.json({ error: "inPortfolio (boolean) is required." }, { status: 400 });
+  }
+
+  // Removing from the portfolio is always allowed (e.g. after a downgrade); only adding
+  // to it is Pro-gated. Re-read from the DB, never trust the session JWT (see /api/analyses).
+  if (body.inPortfolio) {
+    const dbUser = await prisma.user.findUnique({ where: { id: session.user.id }, select: { plan: true } });
+    const plan = PLANS[isPlanId(dbUser?.plan ?? "") ? (dbUser!.plan as keyof typeof PLANS) : "free"];
+    if (!plan.hasPortfolio) {
+      return NextResponse.json(
+        { error: "Portfolio tracking is a Pro feature. Upgrade to add properties to your portfolio.", code: "PLAN_LIMIT_REACHED" },
+        { status: 403 }
+      );
+    }
   }
 
   const analysis = await prisma.landAnalysis.findUnique({ where: { id }, include: { property: true } });
