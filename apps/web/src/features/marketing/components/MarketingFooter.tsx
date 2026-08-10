@@ -7,6 +7,9 @@ export default function MarketingFooter() {
         Land<span className="font-medium text-lp-forest">Pilot</span> — Analyze. Invest. Grow.
       </p>
       <div className="flex items-center gap-4">
+        <Link href="/guides" className="hover:text-lp-ink">
+          Guides
+        </Link>
         <Link href="/pricing" className="hover:text-lp-ink">
           Pricing
         </Link>

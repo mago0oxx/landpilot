@@ -8,7 +8,7 @@ export default function CTAFooter() {
         <TopoPattern />
         <div className="relative z-10">
           <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
-            Ready to analyze your next parcel?
+            Have a lot in mind? Check it before you buy.
           </h2>
           <p className="mx-auto mt-3 max-w-md text-lp-mint/80">
             Create a free account and run your first LPS Score in minutes.

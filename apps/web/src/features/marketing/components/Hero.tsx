@@ -8,18 +8,17 @@ export default function Hero() {
       <div className="grid items-center gap-14 lg:grid-cols-2">
         <div>
           <span className="inline-block rounded-full border border-lp-forest/15 bg-white/60 px-4 py-1.5 text-xs font-medium tracking-wide text-lp-forest-light uppercase">
-            Land investment intelligence
+            Buying your first piece of land?
           </span>
 
           <h1 className="mt-6 text-4xl leading-tight font-bold tracking-tight text-lp-ink sm:text-5xl">
-            Know what a parcel is really worth before you buy it.
+            Don&apos;t buy land you can&apos;t build on.
           </h1>
 
           <p className="mt-5 max-w-xl text-lg text-stone-600">
-            Drop in an address or a listing link. LandPilot runs it through 7 Intelligence
-            Engines — financial, location, development, environmental, market, legal and
-            infrastructure — and returns a single 1000-point LPS Score with a clear risk level
-            and recommendation.
+            Paste the address or the listing link. In 60 seconds we&apos;ll tell you if it&apos;s in a
+            flood zone, whether it has legal road access, if utilities reach it, and what it&apos;s
+            really going to cost you to build.
           </p>
 
           <div className="mt-8 flex flex-wrap items-center gap-4">
@@ -36,6 +35,10 @@ export default function Hero() {
               Sign in
             </Link>
           </div>
+
+          <p className="mt-4 text-sm text-stone-500">
+            Built for first-time land buyers — not professional investors.
+          </p>
 
           <dl className="mt-12 grid grid-cols-3 gap-6 border-t border-lp-border pt-6">
             <div>

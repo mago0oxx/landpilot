@@ -17,6 +17,12 @@ export default function MarketingNav() {
 
       <nav className="flex items-center gap-3">
         <Link
+          href="/guides"
+          className="hidden rounded-xl px-4 py-2.5 text-sm font-medium text-lp-ink transition hover:text-lp-forest sm:inline-flex"
+        >
+          Guides
+        </Link>
+        <Link
           href="/pricing"
           className="rounded-xl px-4 py-2.5 text-sm font-medium text-lp-ink transition hover:text-lp-forest"
         >
