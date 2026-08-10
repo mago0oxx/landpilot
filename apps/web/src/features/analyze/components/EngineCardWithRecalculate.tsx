@@ -69,7 +69,12 @@ export default function EngineCardWithRecalculate({
 
   return (
     <>
-      <EngineCard engine={engine} aiResearched={aiResearched} onClick={() => setOpen(true)} />
+      <EngineCard
+        engine={engine}
+        aiResearched={aiResearched}
+        missingFieldCount={missingFields.length}
+        onClick={() => setOpen(true)}
+      />
       {open && (
         <Modal
           title={`Add missing ${engine.label} data`}

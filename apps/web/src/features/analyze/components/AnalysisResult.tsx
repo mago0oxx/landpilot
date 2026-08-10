@@ -5,6 +5,7 @@ import SectionCard from "@/components/ui/SectionCard";
 import DisclaimerNote from "@/components/shared/DisclaimerNote";
 import TopoPattern from "@/components/shared/TopoPattern";
 import { AiResearchableField, FIELD_TO_ENGINE } from "../services/aiResearch";
+import { getMissingFieldsForEngine } from "../services/engines/factorFields";
 import { EngineId, LPSResult, Recommendation, RiskLevel } from "../types/scoring";
 import { ScenarioResult } from "../types/scenario";
 import { LandAnalysisInput } from "../types/property";
@@ -89,6 +90,7 @@ export default function AnalysisResult({
   const aiResearchedEngines = new Set<EngineId>(
     aiResearchedFields.map((field) => FIELD_TO_ENGINE[field as AiResearchableField]).filter(Boolean)
   );
+  const hasMissingData = result.engines.some((engine) => getMissingFieldsForEngine(engine.engine, inputs).length > 0);
 
   return (
     <div className="space-y-6">
@@ -185,7 +187,13 @@ export default function AnalysisResult({
       )}
 
       <div>
-        <p className="mb-3 text-[10px] font-bold tracking-wide text-stone-500">INTELLIGENCE ENGINE BREAKDOWN</p>
+        <p className="mb-1 text-[10px] font-bold tracking-wide text-stone-500">INTELLIGENCE ENGINE BREAKDOWN</p>
+        {hasMissingData && (
+          <p className="mb-3 text-xs text-stone-500">
+            Click any engine marked <span className="font-semibold text-lp-gold">Add missing fields</span> to fill in what
+            you know and get a more accurate score — it recalculates this analysis in place.
+          </p>
+        )}
         <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
           {result.engines.map((engine) => (
             <EngineCardWithRecalculate

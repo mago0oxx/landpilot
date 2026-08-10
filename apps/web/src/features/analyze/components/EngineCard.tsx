@@ -1,3 +1,4 @@
+import { Pencil } from "lucide-react";
 import { EngineResult } from "../types/scoring";
 
 function scoreTone(score: number): { text: string; bar: string } {
@@ -9,10 +10,13 @@ function scoreTone(score: number): { text: string; bar: string } {
 interface EngineCardProps {
   engine: EngineResult;
   aiResearched?: boolean;
+  /** Number of fields on this engine that are still missing and could be filled in — renders
+   * an "Add data" affordance when > 0, since the card being clickable is otherwise invisible. */
+  missingFieldCount?: number;
   onClick?: () => void;
 }
 
-export default function EngineCard({ engine, aiResearched, onClick }: EngineCardProps) {
+export default function EngineCard({ engine, aiResearched, missingFieldCount = 0, onClick }: EngineCardProps) {
   const tone = scoreTone(engine.score);
   const topFactors = [...engine.factors].sort((a, b) => b.weight - a.weight).slice(0, 3);
 
@@ -45,6 +49,12 @@ export default function EngineCard({ engine, aiResearched, onClick }: EngineCard
           </span>
         ))}
       </div>
+      {missingFieldCount > 0 && (
+        <div className="mt-2 flex items-center gap-1 border-t border-dashed border-lp-gold/30 pt-1.5 text-[9px] font-semibold text-lp-gold">
+          <Pencil size={9} />
+          Add {missingFieldCount} missing field{missingFieldCount === 1 ? "" : "s"}
+        </div>
+      )}
     </button>
   );
 }
