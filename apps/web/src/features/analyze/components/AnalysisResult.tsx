@@ -7,8 +7,9 @@ import TopoPattern from "@/components/shared/TopoPattern";
 import { AiResearchableField, FIELD_TO_ENGINE } from "../services/aiResearch";
 import { EngineId, LPSResult, Recommendation, RiskLevel } from "../types/scoring";
 import { ScenarioResult } from "../types/scenario";
+import { LandAnalysisInput } from "../types/property";
 import DeleteAnalysisButton from "./DeleteAnalysisButton";
-import EngineCard from "./EngineCard";
+import EngineCardWithRecalculate from "./EngineCardWithRecalculate";
 import PortfolioToggleButton from "./PortfolioToggleButton";
 import ScenarioComparison from "./ScenarioComparison";
 import ScoreGauge from "./ScoreGauge";
@@ -56,6 +57,7 @@ interface AnalysisResultProps {
   property: AnalysisResultProperty;
   inPortfolio: boolean;
   canUsePortfolio: boolean;
+  inputs: LandAnalysisInput;
 }
 
 function parseAiSummary(raw?: string | null): ParsedAiSummary | null {
@@ -78,6 +80,7 @@ export default function AnalysisResult({
   property,
   inPortfolio,
   canUsePortfolio,
+  inputs,
 }: AnalysisResultProps) {
   const avgConfidencePercent = Math.round(
     result.engines.reduce((sum, engine) => sum + engine.confidencePercent, 0) / result.engines.length
@@ -185,7 +188,13 @@ export default function AnalysisResult({
         <p className="mb-3 text-[10px] font-bold tracking-wide text-stone-500">INTELLIGENCE ENGINE BREAKDOWN</p>
         <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
           {result.engines.map((engine) => (
-            <EngineCard key={engine.engine} engine={engine} aiResearched={aiResearchedEngines.has(engine.engine)} />
+            <EngineCardWithRecalculate
+              key={engine.engine}
+              analysisId={analysisId}
+              engine={engine}
+              aiResearched={aiResearchedEngines.has(engine.engine)}
+              inputs={inputs}
+            />
           ))}
 
           {/* Decision Intelligence is the aggregator, not an 8th scored engine — no independent

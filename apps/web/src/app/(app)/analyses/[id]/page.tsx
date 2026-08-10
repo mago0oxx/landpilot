@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import AnalysisResult from "@/features/analyze/components/AnalysisResult";
 import { LPSResult } from "@/features/analyze/types/scoring";
 import { ScenarioResult } from "@/features/analyze/types/scenario";
+import { LandAnalysisInput } from "@/features/analyze/types/property";
 import { auth } from "@/auth";
 import { isPlanId, PLANS } from "@/lib/plans";
 import { prisma } from "@/lib/prisma";
@@ -49,6 +50,7 @@ export default async function AnalysisPage({ params }: AnalysisPageProps) {
       scenarios={analysis.scenarios as unknown as ScenarioResult[] | null}
       inPortfolio={analysis.property.inPortfolio}
       canUsePortfolio={plan.hasPortfolio}
+      inputs={analysis.inputs as unknown as LandAnalysisInput}
       property={{
         address: analysis.property.address,
         county: analysis.property.county,

@@ -42,6 +42,19 @@ export async function setAnalysisPortfolio(id: string, inPortfolio: boolean): Pr
   }
 }
 
+export async function recalculateAnalysis(id: string, updates: Record<string, unknown>): Promise<void> {
+  const response = await fetch(`/api/analyses/${id}/recalculate`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ updates }),
+  });
+
+  if (!response.ok) {
+    const body = await response.json().catch(() => null);
+    throw new Error(body?.error ?? "Failed to recalculate. Please try again.");
+  }
+}
+
 export async function deleteAnalysis(id: string): Promise<void> {
   const response = await fetch(`/api/analyses/${id}`, { method: "DELETE" });
 
