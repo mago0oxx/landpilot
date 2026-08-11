@@ -16,7 +16,8 @@ export default function robots(): MetadataRoute.Robots {
         disallow: ["/api/", "/dashboard", "/analyses/", "/portfolio", "/properties", "/settings", "/intelligence", "/reset-password", "/forgot-password"],
       },
     ],
+    // No `host` directive on purpose — it's a Yandex extension that Google reports as an
+    // unrecognised line, and the canonical domain is already declared via metadata.
     sitemap: `${SITE_URL}/sitemap.xml`,
-    host: SITE_URL,
   };
 }
