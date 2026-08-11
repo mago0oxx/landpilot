@@ -36,6 +36,10 @@ export const metadata: Metadata = {
   description: SITE_DESCRIPTION,
   applicationName: "LandPilot",
   alternates: { canonical: "/" },
+  // Google Search Console ownership proof. Next renders this as the
+  // <meta name="google-site-verification"> tag Search Console looks for. Not a secret —
+  // it only proves control of this domain, and it must be publicly visible to work.
+  verification: { google: "BwR_82xNBAVEjnQig2GLvGSVU1CwLEqO5V8qz6zm2U4" },
   openGraph: {
     type: "website",
     siteName: "LandPilot",
