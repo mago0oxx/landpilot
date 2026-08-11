@@ -1,7 +1,7 @@
 "use client";
 
 import { Sparkles } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useFormContext } from "react-hook-form";
 import SectionCard from "@/components/ui/SectionCard";
 import { AnalysisFormInput } from "../../schemas/analysisSchema";
@@ -9,13 +9,30 @@ import { extractListingData, lookupPropertyData } from "../../services/geocodeAp
 import NumberField from "../fields/NumberField";
 import TextField from "../fields/TextField";
 
-export default function PropertyInformationSection() {
+interface PropertyInformationSectionProps {
+  /** True when the address arrived prefilled (from a free check) and there'll be no blur
+   * event to trigger the lookup. */
+  autoLookupOnMount?: boolean;
+}
+
+export default function PropertyInformationSection({ autoLookupOnMount }: PropertyInformationSectionProps = {}) {
   const { getValues, setValue } = useFormContext<AnalysisFormInput>();
   const [isLookingUp, setIsLookingUp] = useState(false);
   const [lookupNote, setLookupNote] = useState<string>();
   const [listingText, setListingText] = useState("");
   const [isExtracting, setIsExtracting] = useState(false);
   const [extractNote, setExtractNote] = useState<string>();
+  const hasAutoLookedUp = useRef(false);
+
+  // A prefilled address never fires onBlur, so the auto-fill would silently never run and
+  // the buyer would be staring at empty fields for data we already have.
+  useEffect(() => {
+    if (!autoLookupOnMount || hasAutoLookedUp.current) return;
+    hasAutoLookedUp.current = true;
+    void handleAddressBlur();
+    // handleAddressBlur is re-created every render; the ref guard is what makes this run once.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [autoLookupOnMount]);
 
   async function handleAddressBlur() {
     const address = getValues("property.address");

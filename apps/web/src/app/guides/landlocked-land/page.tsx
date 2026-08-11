@@ -2,13 +2,14 @@ import type { Metadata } from "next";
 import GuideLayout from "@/features/marketing/components/GuideLayout";
 
 export const metadata: Metadata = {
-  title: "How to Check If a Lot Has Legal Access (Landlocked Land) — LandPilot",
+  title: "How to Check If a Lot Has Legal Access (Landlocked Land)",
   description: "The difference between physical access and legal access to a parcel, and how to confirm a lot isn't landlocked before you buy.",
 };
 
 export default function LandlockedLandPage() {
   return (
     <GuideLayout
+      slug="landlocked-land"
       title="How to Check If a Lot Has Legal Access (Landlocked Land)"
       dek="A dirt path to the road isn't the same as a legal right to use it. Here's how to tell the difference."
     >

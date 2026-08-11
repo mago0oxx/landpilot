@@ -3,13 +3,14 @@ import Link from "next/link";
 import GuideLayout from "@/features/marketing/components/GuideLayout";
 
 export const metadata: Metadata = {
-  title: "How to Know If Land Is Buildable Before You Buy — LandPilot",
+  title: "How to Know If Land Is Buildable Before You Buy",
   description: "A step-by-step checklist for confirming a vacant lot is actually buildable before you make an offer.",
 };
 
 export default function IsLandBuildablePage() {
   return (
     <GuideLayout
+      slug="is-land-buildable"
       title="How to Know If Land Is Buildable Before You Buy"
       dek="Vacant land isn't automatically buildable land. Here's the checklist to run before you make an offer."
     >

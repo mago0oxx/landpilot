@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Database, ShieldCheck, SlidersHorizontal } from "lucide-react";
 import TopoPattern from "@/components/shared/TopoPattern";
+import AddressCheckForm from "@/features/preview/components/AddressCheckForm";
 
 export default function Hero() {
   return (
@@ -21,23 +22,15 @@ export default function Hero() {
             really going to cost you to build.
           </p>
 
-          <div className="mt-8 flex flex-wrap items-center gap-4">
-            <Link
-              href="/register"
-              className="inline-flex items-center justify-center rounded-xl bg-lp-gold px-6 py-3.5 text-sm font-medium text-lp-gold-ink transition hover:brightness-105"
-            >
-              Start a free analysis
-            </Link>
-            <Link
-              href="/login"
-              className="inline-flex items-center justify-center rounded-xl border border-lp-forest/20 px-6 py-3.5 text-sm font-medium text-lp-ink transition hover:border-lp-forest/50"
-            >
-              Sign in
-            </Link>
+          <div className="mt-8">
+            <AddressCheckForm />
           </div>
 
           <p className="mt-4 text-sm text-stone-500">
-            Built for first-time land buyers — not professional investors.
+            Built for first-time land buyers — not professional investors.{" "}
+            <Link href="/login" className="font-medium text-lp-forest-light hover:underline">
+              Sign in
+            </Link>
           </p>
 
           <dl className="mt-12 grid grid-cols-3 gap-6 border-t border-lp-border pt-6">

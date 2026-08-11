@@ -1,3 +1,7 @@
+# FUSE leftovers — created when a mounted filesystem replaces a file that's still open.
+# Stale copies of real source files, never worth committing.
+.fuse_hidden*
+
 # Logs
 logs
 *.log

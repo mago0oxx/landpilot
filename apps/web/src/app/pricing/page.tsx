@@ -8,7 +8,7 @@ import { auth } from "@/auth";
 import { isPlanId, PLANS, PlanId } from "@/lib/plans";
 import { prisma } from "@/lib/prisma";
 
-export const metadata: Metadata = { title: "Pricing — LandPilot" };
+export const metadata: Metadata = { title: "Pricing" };
 export const dynamic = "force-dynamic";
 
 export default async function PricingPage() {

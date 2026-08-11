@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import MarketingFooter from "@/features/marketing/components/MarketingFooter";
 import MarketingNav from "@/features/marketing/components/MarketingNav";
 
-export const metadata: Metadata = { title: "Terms of Service — LandPilot" };
+export const metadata: Metadata = { title: "Terms of Service" };
 
 export default function TermsPage() {
   return (

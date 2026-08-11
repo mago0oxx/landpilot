@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import MarketingFooter from "@/features/marketing/components/MarketingFooter";
 import MarketingNav from "@/features/marketing/components/MarketingNav";
 
-export const metadata: Metadata = { title: "Privacy Policy — LandPilot" };
+export const metadata: Metadata = { title: "Privacy Policy" };
 
 export default function PrivacyPage() {
   return (

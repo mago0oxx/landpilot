@@ -5,7 +5,7 @@ import MarketingNav from "@/features/marketing/components/MarketingNav";
 import { GUIDES } from "@/features/marketing/data/guides";
 
 export const metadata: Metadata = {
-  title: "Land Buying Guides — LandPilot",
+  title: "Land Buying Guides",
   description: "Plain-English answers to the questions that trip up first-time land buyers — buildability, perc tests, access, utilities, and flood zones.",
 };
 

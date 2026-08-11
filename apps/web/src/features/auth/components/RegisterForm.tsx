@@ -10,9 +10,11 @@ import GoogleSignInButton from "./GoogleSignInButton";
 
 interface RegisterFormProps {
   googleEnabled: boolean;
+  /** Free address check this signup came from — claimed server-side, then prefilled. */
+  previewId?: string;
 }
 
-export default function RegisterForm({ googleEnabled }: RegisterFormProps) {
+export default function RegisterForm({ googleEnabled, previewId }: RegisterFormProps) {
   const router = useRouter();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -28,7 +30,7 @@ export default function RegisterForm({ googleEnabled }: RegisterFormProps) {
     const response = await fetch("/api/register", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name, email, password }),
+      body: JSON.stringify({ name, email, password, previewId }),
     });
 
     if (!response.ok) {
@@ -46,7 +48,9 @@ export default function RegisterForm({ googleEnabled }: RegisterFormProps) {
       return;
     }
 
-    router.push("/dashboard");
+    // Someone who signed up from a free check came for one specific lot — drop them into
+    // the analysis for it, not a generic dashboard.
+    router.push(previewId ? `/analize?preview=${previewId}` : "/dashboard");
     router.refresh();
   }
 

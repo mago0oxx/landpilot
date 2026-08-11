@@ -3,13 +3,14 @@ import Link from "next/link";
 import GuideLayout from "@/features/marketing/components/GuideLayout";
 
 export const metadata: Metadata = {
-  title: "How Much It Costs to Bring Power and Water to Land With No Utilities — LandPilot",
+  title: "How Much It Costs to Bring Power and Water to Land With No Utilities",
   description: "Realistic cost ranges for extending electricity, drilling a well, and installing septic on undeveloped land.",
 };
 
 export default function UtilityCostsPage() {
   return (
     <GuideLayout
+      slug="utility-costs"
       title="How Much It Costs to Bring Power and Water to Land With No Utilities"
       dek={`"Utilities available at the street" isn't a guarantee. Here's what running power, water, and septic actually costs.`}
     >

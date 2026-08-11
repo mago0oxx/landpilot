@@ -4,7 +4,7 @@ import type { ReactNode } from "react";
 import GuideLayout from "@/features/marketing/components/GuideLayout";
 
 export const metadata: Metadata = {
-  title: "Land Buying Due Diligence Checklist — LandPilot",
+  title: "Land Buying Due Diligence Checklist",
   description: "Everything to verify before you close on a vacant lot — zoning, access, utilities, environmental risk, title, and more.",
 };
 
@@ -87,6 +87,7 @@ const ITEMS: { title: string; body: ReactNode }[] = [
 export default function DueDiligenceChecklistPage() {
   return (
     <GuideLayout
+      slug="due-diligence-checklist"
       title="Land Buying Due Diligence Checklist"
       dek="Everything to verify before you close on a vacant lot, in one place."
     >

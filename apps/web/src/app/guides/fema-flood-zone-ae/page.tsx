@@ -2,13 +2,14 @@ import type { Metadata } from "next";
 import GuideLayout from "@/features/marketing/components/GuideLayout";
 
 export const metadata: Metadata = {
-  title: "What FEMA Flood Zone AE Means for Your Land — LandPilot",
+  title: "What FEMA Flood Zone AE Means for Your Land",
   description: "What FEMA Flood Zone AE means, how it differs from other flood zones, and how it affects insurance and construction.",
 };
 
 export default function FemaFloodZoneAePage() {
   return (
     <GuideLayout
+      slug="fema-flood-zone-ae"
       title="What FEMA Flood Zone AE Means for Your Land"
       dek="It doesn't automatically mean don't buy — but it changes your insurance costs and how you'll need to build."
     >

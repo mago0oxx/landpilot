@@ -2,13 +2,14 @@ import type { Metadata } from "next";
 import GuideLayout from "@/features/marketing/components/GuideLayout";
 
 export const metadata: Metadata = {
-  title: "What Is a Perc Test — and Why It Can Kill Your Purchase — LandPilot",
+  title: "What Is a Perc Test — and Why It Can Kill Your Purchase",
   description: "What a percolation test measures, why it matters for septic-dependent lots, and what a failed perc test means for your purchase.",
 };
 
 export default function PercTestPage() {
   return (
     <GuideLayout
+      slug="perc-test"
       title="What Is a Perc Test — and Why It Can Kill Your Purchase"
       dek="If the lot isn't on public sewer, a failed percolation test can mean you legally can't build there."
     >

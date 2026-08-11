@@ -84,6 +84,37 @@ model PasswordResetToken {
   @@index([userId])
 }
 
+// A free, no-account address check run from the marketing site. Holds only real public-data
+// findings (FEMA flood zone, wetlands, hazard index, Census growth) — never a score, since a
+// score needs the buyer's own numbers. Persisted rather than computed on the fly so the
+// result has a shareable URL, so signup can carry the address into the analyze form, and so
+// abuse can be rate-limited without a separate store.
+model LandPreview {
+  id      String  @id @default(cuid())
+  address String
+  county  String?
+  state   String?
+
+  // PropertyLookupResult — kept as JSON because the set of data sources is still growing.
+  lookup Json
+  // Normalized address (lowercased, whitespace collapsed) so repeat checks of the same lot
+  // reuse the cached lookup instead of re-hitting six government APIs.
+  addressKey String
+
+  // sha256(ip + secret) — lets us rate-limit per IP without storing an IP address.
+  ipHash String?
+
+  // Set once the visitor creates an account from this preview, so we can measure how well
+  // the free check actually converts and stop counting it against a signed-up user's quota.
+  claimedByUserId String?
+  claimedAt       DateTime?
+
+  createdAt DateTime @default(now())
+
+  @@index([addressKey, createdAt])
+  @@index([ipHash, createdAt])
+}
+
 model Property {
   id          String   @id @default(cuid())
   userId      String

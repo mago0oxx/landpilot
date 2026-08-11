@@ -17,9 +17,11 @@ import ReviewSection from "./sections/ReviewSection";
 
 interface AnalyzeFormProps {
   plan: PlanId;
+  /** Carried over from a free address check — prefills the address and auto-runs the lookup. */
+  initialAddress?: string;
 }
 
-export default function AnalyzeForm({ plan }: AnalyzeFormProps) {
+export default function AnalyzeForm({ plan, initialAddress }: AnalyzeFormProps) {
   const planConfig = PLANS[plan];
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -32,7 +34,7 @@ export default function AnalyzeForm({ plan }: AnalyzeFormProps) {
     resolver: zodResolver(analysisSchema),
     defaultValues: {
       intent: "investment",
-      property: { state: "FL" },
+      property: { state: "FL", address: initialAddress },
       // These sections no longer have their own form UI (see the removed *Section
       // components), but analysisSchema still requires each key to be present — react-hook-form
       // never registers a field under them now, so without this the submitted value is
@@ -69,7 +71,7 @@ export default function AnalyzeForm({ plan }: AnalyzeFormProps) {
     <FormProvider {...methods}>
       <form className="space-y-6" onSubmit={methods.handleSubmit(onSubmit)}>
         <IntentSelector />
-        <PropertyInformationSection />
+        <PropertyInformationSection autoLookupOnMount={Boolean(initialAddress)} />
         {planConfig.hasAiResearch ? (
           <AiResearchToggle checked={useAiResearch} onChange={setUseAiResearch} />
         ) : (
