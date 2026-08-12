@@ -18,7 +18,10 @@ export default function PricingSection() {
       <div className="mx-auto w-full max-w-5xl px-6">
         <div className="text-center">
           <h2 className="text-3xl font-bold tracking-tight text-lp-ink">Simple pricing</h2>
-          <p className="mt-3 text-stone-600">Start free. Upgrade as your portfolio grows.</p>
+          <p className="mt-3 text-stone-600">
+            The address check is always free. Plans are for the full analysis, when you&apos;re
+            comparing lots seriously.
+          </p>
         </div>
 
         <div className="mt-12">

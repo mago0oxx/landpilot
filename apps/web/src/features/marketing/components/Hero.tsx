@@ -1,7 +1,14 @@
 import Link from "next/link";
-import { Database, ShieldCheck, SlidersHorizontal } from "lucide-react";
+import { AlertTriangle, Check, Database, LockOpen, Wallet } from "lucide-react";
 import TopoPattern from "@/components/shared/TopoPattern";
 import AddressCheckForm from "@/features/preview/components/AddressCheckForm";
+
+const SAMPLE_FINDINGS = [
+  { label: "FEMA flood zone", tone: "alert", detail: "Zone AE — high risk. Flood insurance required with a federal mortgage." },
+  { label: "Wetlands", tone: "clear", detail: "None mapped on this parcel in the USFWS inventory." },
+  { label: "County population & jobs", tone: "clear", detail: "Census ACS: population +1.6%, employment +2.4%." },
+  { label: "Nearby services", tone: "clear", detail: "66 mapped shops, schools and healthcare nearby." },
+] as const;
 
 export default function Hero() {
   return (
@@ -17,9 +24,9 @@ export default function Hero() {
           </h1>
 
           <p className="mt-5 max-w-xl text-lg text-stone-600">
-            Paste the address or the listing link. In 60 seconds we&apos;ll tell you if it&apos;s in a
-            flood zone, whether it has legal road access, if utilities reach it, and what it&apos;s
-            really going to cost you to build.
+            Paste the address. In 60 seconds we&apos;ll pull the parcel&apos;s FEMA flood zone, its
+            wetlands status, and how the county is trending — straight from government records. Then
+            we&apos;ll tell you plainly what still needs a human to check.
           </p>
 
           <div className="mt-8">
@@ -33,60 +40,59 @@ export default function Hero() {
             </Link>
           </p>
 
+          {/* These describe the free check sitting directly above them. Engine count and the
+              1000-point score belong to the paid analysis, further down the page. */}
           <dl className="mt-12 grid grid-cols-3 gap-6 border-t border-lp-border pt-6">
             <div>
               <dt className="flex items-center gap-1.5 text-xs font-medium text-stone-500">
-                <SlidersHorizontal size={14} /> Engines
+                <Wallet size={14} /> Cost
               </dt>
-              <dd className="mt-1 text-2xl font-bold text-lp-ink">7</dd>
+              <dd className="mt-1 text-2xl font-bold text-lp-ink">Free</dd>
             </div>
             <div>
               <dt className="flex items-center gap-1.5 text-xs font-medium text-stone-500">
-                <ShieldCheck size={14} /> LPS Score
+                <LockOpen size={14} /> Account
               </dt>
-              <dd className="mt-1 text-2xl font-bold text-lp-ink">/ 1000</dd>
+              <dd className="mt-1 text-2xl font-bold text-lp-ink">Not needed</dd>
             </div>
             <div>
               <dt className="flex items-center gap-1.5 text-xs font-medium text-stone-500">
-                <Database size={14} /> Data sources
+                <Database size={14} /> Sources
               </dt>
-              <dd className="mt-1 text-2xl font-bold text-lp-ink">FEMA · Census · GIS</dd>
+              <dd className="mt-1 text-2xl font-bold text-lp-ink">FEMA · USFWS · Census</dd>
             </div>
           </dl>
         </div>
 
+        {/* Mirrors exactly what a free check returns — real findings, no score. The score is
+            the paid product, and putting it here made the hero promise something the address
+            field below it doesn't deliver. */}
         <div className="relative overflow-hidden rounded-3xl bg-lp-forest p-8 text-lp-cream shadow-xl">
           <TopoPattern />
           <div className="relative z-10">
-            <p className="text-xs font-medium tracking-wide text-lp-mint/70 uppercase">Sample result</p>
+            <p className="text-xs font-medium tracking-wide text-lp-mint/70 uppercase">Sample check</p>
             <p className="mt-1 text-sm text-lp-mint/60">9000 Example Ave, Tampa, FL</p>
 
-            <div className="mt-6 flex items-end gap-3">
-              <span className="text-6xl font-bold">742</span>
-              <span className="mb-2 text-sm text-lp-mint/70">/ 1000</span>
-            </div>
-
-            <div className="mt-3 inline-flex items-center rounded-full bg-lp-gold/15 px-3 py-1 text-xs font-medium text-lp-gold">
-              Buy · Medium risk
-            </div>
-
-            <div className="mt-8 space-y-3">
-              {[
-                { label: "Financial", value: 82 },
-                { label: "Location", value: 76 },
-                { label: "Development", value: 64 },
-                { label: "Environmental", value: 88 },
-              ].map((row) => (
-                <div key={row.label}>
-                  <div className="flex justify-between text-xs text-lp-mint/70">
-                    <span>{row.label}</span>
-                    <span>{row.value}</span>
-                  </div>
-                  <div className="mt-1 h-1.5 w-full overflow-hidden rounded-full bg-white/10">
-                    <div className="h-full rounded-full bg-lp-mint" style={{ width: `${row.value}%` }} />
+            <div className="mt-6 space-y-4">
+              {SAMPLE_FINDINGS.map((finding) => (
+                <div key={finding.label} className="flex items-start gap-3">
+                  {finding.tone === "alert" ? (
+                    <AlertTriangle size={16} className="mt-0.5 shrink-0 text-lp-gold" />
+                  ) : (
+                    <Check size={16} className="mt-0.5 shrink-0 text-lp-mint" />
+                  )}
+                  <div>
+                    <p className="text-sm font-medium">{finding.label}</p>
+                    <p className="mt-0.5 text-xs leading-relaxed text-lp-mint/60">{finding.detail}</p>
                   </div>
                 </div>
               ))}
+            </div>
+
+            <div className="mt-6 border-t border-white/10 pt-4">
+              <p className="text-xs text-lp-mint/50">
+                Still needs a human: perc test, legal access, zoning, title.
+              </p>
             </div>
           </div>
         </div>

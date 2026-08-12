@@ -8,14 +8,19 @@ export default function EnginesGrid() {
     <section className="bg-white/60 py-20">
       <div className="mx-auto w-full max-w-6xl px-6">
         <div className="max-w-xl">
-          <h2 className="text-3xl font-bold tracking-tight text-lp-ink">7 Intelligence Engines, 1 score</h2>
+          <h2 className="text-3xl font-bold tracking-tight text-lp-ink">
+            Going further: the full analysis
+          </h2>
           <p className="mt-3 text-stone-600">
-            Every engine scores independently, tracks its own confidence, and flags its own risks.
-            The weights below add up to the full 1000-point LPS Score.
+            The free check reads the public record. Once you add your numbers — asking price, lot
+            size, what you plan to build — seven engines score the deal and add up to a single
+            1000-point LPS Score.
           </p>
         </div>
 
-        <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        {/* Seven cards in a three-column grid leaves an orphan on the last row. Centering the
+            tracks keeps the trailing card visually anchored instead of stranded on the left. */}
+        <div className="mt-12 grid justify-center gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {MARKETING_ENGINES.map((engine, index) => {
             const Icon = ICONS[index];
             return (

@@ -113,17 +113,28 @@ function wetlandsFinding(present: boolean | null): Finding {
   return { ...base, status: "unknown", detail: "The wetlands inventory returned no data for this location." };
 }
 
+/**
+ * Never escalates past `caution`, even at "high". The National Risk Index is a *county-level*
+ * rating, so it says nothing specific about this parcel — and in coastal states it reads high
+ * almost everywhere. Rendering that as a red alert would put a warning banner on nearly every
+ * Florida result, which trains people to ignore the banner that actually matters.
+ */
 function hazardFinding(exposure: PropertyLookupResult["naturalHazardExposure"]): Finding {
-  const base = { id: "hazard", label: "Natural hazard exposure" };
+  const base = { id: "hazard", label: "County natural hazard rating" };
   switch (exposure) {
     case "high":
       return {
         ...base,
-        status: "alert",
-        detail: "FEMA's National Risk Index rates this county high for natural hazard risk. Expect it to show up in insurance pricing.",
+        status: "caution",
+        detail:
+          "FEMA's National Risk Index rates this county high for natural hazard risk. That's a county-wide figure, not a reading on this parcel — but it does tend to show up in insurance pricing.",
       };
     case "medium":
-      return { ...base, status: "caution", detail: "FEMA's National Risk Index rates this county medium for natural hazard risk." };
+      return {
+        ...base,
+        status: "clear",
+        detail: "FEMA's National Risk Index rates this county medium for natural hazard risk — around the national middle.",
+      };
     case "low":
       return { ...base, status: "clear", detail: "FEMA's National Risk Index rates this county low for natural hazard risk." };
     default:

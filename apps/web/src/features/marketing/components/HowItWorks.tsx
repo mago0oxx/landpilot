@@ -1,4 +1,4 @@
-import { FileSearch, Gauge, MapPin } from "lucide-react";
+import { ClipboardCheck, FileSearch, MapPin } from "lucide-react";
 
 const STEPS = [
   {
@@ -9,12 +9,12 @@ const STEPS = [
   {
     icon: FileSearch,
     title: "We pull the real data",
-    description: "Flood zones, parcel records, and population trends are fetched from FEMA, Census, and county GIS sources — not guessed.",
+    description: "Flood zones, wetlands, parcel records, and county trends are fetched from FEMA, USFWS, Census and county GIS — not guessed.",
   },
   {
-    icon: Gauge,
-    title: "Get a score you can act on",
-    description: "A 1000-point LPS Score, a risk level, and a Strong Buy / Buy / Consider / Pass recommendation, broken down by engine.",
+    icon: ClipboardCheck,
+    title: "You get findings, and the gaps",
+    description: "What the public record says about the parcel, plus a straight list of what still needs the county, a surveyor, or a title company.",
   },
 ];
 
@@ -24,7 +24,7 @@ export default function HowItWorks() {
       <div className="max-w-xl">
         <h2 className="text-3xl font-bold tracking-tight text-lp-ink">How it works</h2>
         <p className="mt-3 text-stone-600">
-          No lengthy forms and no paid AI calls to get a first read on a parcel.
+          No forms, no account, and nothing to pay to get a first read on a parcel.
         </p>
       </div>
 

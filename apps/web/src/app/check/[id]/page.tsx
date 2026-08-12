@@ -9,12 +9,28 @@ import { getPreview } from "@/features/preview/services/previewStore";
 
 export const dynamic = "force-dynamic";
 
-// These are generated from whatever address a visitor types, so they'd be thin, near-duplicate
-// pages at scale — exactly what Google penalises. They exist to be *shared*, not crawled.
-// The county guides are the indexable SEO surface.
-export const metadata: Metadata = {
-  robots: { index: false, follow: true },
-};
+/**
+ * Titled with the actual address so a shared link reads as the lot it's about, rather than the
+ * generic site title. Still noindex: these are generated from whatever address a visitor types,
+ * so at scale they'd be thin, near-duplicate pages. They exist to be *shared*, not crawled —
+ * the guides are the indexable surface.
+ */
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}): Promise<Metadata> {
+  const { id } = await params;
+  const preview = await getPreview(id);
+
+  return {
+    title: preview ? `Land check — ${preview.address}` : "Land check",
+    description: preview
+      ? `Flood zone, wetlands and county data for ${preview.address}, pulled from public FEMA, USFWS and Census records.`
+      : undefined,
+    robots: { index: false, follow: true },
+  };
+}
 
 const TONE_RING: Record<string, string> = {
   alert: "border-red-200 bg-red-50",
