@@ -13,7 +13,21 @@ export default function robots(): MetadataRoute.Robots {
         userAgent: "*",
         allow: "/",
         // Gated or single-use routes — no search value, and crawling them wastes budget.
-        disallow: ["/api/", "/dashboard", "/analyses/", "/portfolio", "/properties", "/settings", "/intelligence", "/reset-password", "/forgot-password"],
+        disallow: [
+          "/api/",
+          "/dashboard",
+          "/analyses/",
+          "/portfolio",
+          "/properties",
+          "/settings",
+          "/intelligence",
+          "/reset-password",
+          "/forgot-password",
+          // Per-address result pages in both locales: shareable, but thin and near-duplicate
+          // at scale, so they stay out of the index.
+          "/check/",
+          "/es/verificacion/",
+        ],
       },
     ],
     // No `host` directive on purpose — it's a Yandex extension that Google reports as an

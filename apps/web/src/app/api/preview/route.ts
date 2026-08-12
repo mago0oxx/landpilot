@@ -9,6 +9,9 @@ import { getPostHogServer } from "@/lib/posthogServer";
 
 const bodySchema = z.object({
   address: z.string().trim().min(6, "Enter a full street address, including city and state."),
+  /** Which language surface the check was started from — tracked so we can tell whether the
+   * Spanish pages actually bring people, rather than guessing. */
+  locale: z.enum(["en", "es"]).optional(),
 });
 
 /** Trusts Vercel's x-forwarded-for, whose first entry is the real client IP. */
@@ -39,7 +42,7 @@ export async function POST(request: NextRequest) {
       // Anonymous by definition — the preview id is the only handle we have until signup.
       distinctId: `preview:${id}`,
       event: "preview_completed",
-      properties: { previewId: id },
+      properties: { previewId: id, locale: parsed.data.locale ?? "en" },
     });
 
     return NextResponse.json({ id }, { status: 201 });

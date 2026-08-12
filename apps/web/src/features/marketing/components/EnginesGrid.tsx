@@ -1,28 +1,29 @@
 import { Banknote, Hammer, Landmark, Leaf, LineChart, MapPinned, Zap } from "lucide-react";
 import { MARKETING_ENGINES } from "@/features/marketing/data/engines";
+import { Locale } from "@/i18n/config";
+import { getMarketingDictionary } from "@/i18n/marketing";
 
 const ICONS = [Banknote, MapPinned, Hammer, Leaf, LineChart, Landmark, Zap];
 
-export default function EnginesGrid() {
+export default function EnginesGrid({ locale = "en" }: { locale?: Locale }) {
+  const t = getMarketingDictionary(locale).engines;
+
   return (
     <section className="bg-white/60 py-20">
       <div className="mx-auto w-full max-w-6xl px-6">
         <div className="max-w-xl">
-          <h2 className="text-3xl font-bold tracking-tight text-lp-ink">
-            Going further: the full analysis
-          </h2>
-          <p className="mt-3 text-stone-600">
-            The free check reads the public record. Once you add your numbers — asking price, lot
-            size, what you plan to build — seven engines score the deal and add up to a single
-            1000-point LPS Score.
-          </p>
+          <h2 className="text-3xl font-bold tracking-tight text-lp-ink">{t.title}</h2>
+          <p className="mt-3 text-stone-600">{t.subtitle}</p>
         </div>
 
         {/* Seven cards in a three-column grid leaves an orphan on the last row. Centering the
             tracks keeps the trailing card visually anchored instead of stranded on the left. */}
         <div className="mt-12 grid justify-center gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {MARKETING_ENGINES.map((engine, index) => {
-            const Icon = ICONS[index];
+          {t.items.map((engine, index) => {
+            const Icon = ICONS[index]!;
+            // Weights stay in MARKETING_ENGINES so the point values have one source of truth
+            // across locales — only the names and descriptions are translated.
+            const weight = MARKETING_ENGINES[index]!.weight;
             return (
               <div key={engine.name} className="rounded-2xl border border-lp-border bg-lp-cream p-6">
                 <div className="flex items-start justify-between">
@@ -30,7 +31,7 @@ export default function EnginesGrid() {
                     <Icon size={18} />
                   </div>
                   <span className="rounded-full bg-lp-gold/15 px-2.5 py-1 text-xs font-medium text-lp-gold">
-                    {engine.weight} pts
+                    {weight} pts
                   </span>
                 </div>
                 <h3 className="mt-4 font-semibold text-lp-ink">{engine.name}</h3>

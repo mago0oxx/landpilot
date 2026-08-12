@@ -9,28 +9,36 @@ import PricingSection from "@/features/marketing/components/PricingSection";
 import CTAFooter from "@/features/marketing/components/CTAFooter";
 import MarketingFooter from "@/features/marketing/components/MarketingFooter";
 
-// Tells Google these are language variants of the same page rather than duplicates, and
-// which one to serve to a Spanish-speaking searcher.
 export const metadata: Metadata = {
+  title: "LandPilot — Revisa un terreno en EE.UU. antes de comprarlo",
+  description:
+    "Pega la dirección de un lote en Estados Unidos y consulta gratis su zona de inundación FEMA, humedales y datos del condado. Sin cuenta.",
   alternates: {
-    canonical: "/",
+    canonical: "/es",
     languages: { en: "/", "es-US": "/es" },
+  },
+  openGraph: {
+    title: "LandPilot — Revisa un terreno en EE.UU. antes de comprarlo",
+    description:
+      "Pega la dirección de un lote en Estados Unidos y consulta gratis su zona de inundación FEMA, humedales y datos del condado.",
+    url: "/es",
+    locale: "es_US",
   },
 };
 
-export default async function RootPage() {
+export default async function SpanishHomePage() {
   const session = await auth();
   if (session?.user) redirect("/dashboard");
 
   return (
     <div className="bg-lp-cream">
-      <MarketingNav />
-      <Hero />
-      <HowItWorks />
-      <EnginesGrid />
-      <PricingSection />
-      <CTAFooter />
-      <MarketingFooter />
+      <MarketingNav locale="es" altHref="/" />
+      <Hero locale="es" />
+      <HowItWorks locale="es" />
+      <EnginesGrid locale="es" />
+      <PricingSection locale="es" />
+      <CTAFooter locale="es" />
+      <MarketingFooter locale="es" />
     </div>
   );
 }

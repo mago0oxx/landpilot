@@ -3,17 +3,22 @@
 import { ArrowRight, Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
+import { Locale } from "@/i18n/config";
+import { getMarketingDictionary } from "@/i18n/marketing";
 
 interface AddressCheckFormProps {
   /** `hero` is the light-on-cream marketing variant; `inline` is the boxed guide CTA. */
   variant?: "hero" | "inline";
   buttonLabel?: string;
+  locale?: Locale;
 }
 
 export default function AddressCheckForm({
   variant = "hero",
-  buttonLabel = "Check this lot free",
+  buttonLabel,
+  locale = "en",
 }: AddressCheckFormProps) {
+  const t = getMarketingDictionary(locale).addressForm;
   const router = useRouter();
   const [address, setAddress] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -30,22 +35,22 @@ export default function AddressCheckForm({
       const response = await fetch("/api/preview", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ address }),
+        body: JSON.stringify({ address, locale }),
       });
 
       const body = (await response.json().catch(() => null)) as { id?: string; error?: string } | null;
 
       if (!response.ok || !body?.id) {
-        setError(body?.error ?? "Something went wrong checking that address. Try again.");
+        setError(body?.error ?? t.genericError);
         setIsSubmitting(false);
         return;
       }
 
       // Left in the loading state on purpose — the push is a navigation, and flipping the
       // button back to idle first makes it look like nothing happened.
-      router.push(`/check/${body.id}`);
+      router.push(locale === "es" ? `/es/verificacion/${body.id}` : `/check/${body.id}`);
     } catch {
-      setError("Couldn't reach the server. Check your connection and try again.");
+      setError(t.networkError);
       setIsSubmitting(false);
     }
   }
@@ -57,8 +62,8 @@ export default function AddressCheckForm({
           type="text"
           value={address}
           onChange={(event) => setAddress(event.target.value)}
-          placeholder="123 Main St, Tampa, FL"
-          aria-label="Property address"
+          placeholder={t.placeholder}
+          aria-label={t.ariaLabel}
           autoComplete="street-address"
           className={`flex-1 rounded-xl border px-4 py-3.5 text-sm text-lp-ink outline-none transition placeholder:text-stone-400 focus:border-lp-forest ${
             variant === "hero" ? "border-lp-forest/20 bg-white" : "border-stone-300 bg-white"
@@ -71,11 +76,11 @@ export default function AddressCheckForm({
         >
           {isSubmitting ? (
             <>
-              <Loader2 size={16} className="animate-spin" /> Checking...
+              <Loader2 size={16} className="animate-spin" /> {t.checking}
             </>
           ) : (
             <>
-              {buttonLabel} <ArrowRight size={16} />
+              {buttonLabel ?? t.button} <ArrowRight size={16} />
             </>
           )}
         </button>
@@ -83,10 +88,7 @@ export default function AddressCheckForm({
 
       {error && <p className="mt-3 text-sm text-red-700">{error}</p>}
 
-      <p className="mt-3 text-xs text-stone-500">
-        No account needed. Pulls FEMA flood maps, the federal wetlands inventory and Census data
-        for the parcel.
-      </p>
+      <p className="mt-3 text-xs text-stone-500">{t.disclaimer}</p>
     </form>
   );
 }

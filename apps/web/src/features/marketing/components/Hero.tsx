@@ -2,41 +2,34 @@ import Link from "next/link";
 import { AlertTriangle, Check, Database, LockOpen, Wallet } from "lucide-react";
 import TopoPattern from "@/components/shared/TopoPattern";
 import AddressCheckForm from "@/features/preview/components/AddressCheckForm";
+import { Locale } from "@/i18n/config";
+import { getMarketingDictionary } from "@/i18n/marketing";
 
-const SAMPLE_FINDINGS = [
-  { label: "FEMA flood zone", tone: "alert", detail: "Zone AE — high risk. Flood insurance required with a federal mortgage." },
-  { label: "Wetlands", tone: "clear", detail: "None mapped on this parcel in the USFWS inventory." },
-  { label: "County population & jobs", tone: "clear", detail: "Census ACS: population +1.6%, employment +2.4%." },
-  { label: "Nearby services", tone: "clear", detail: "66 mapped shops, schools and healthcare nearby." },
-] as const;
+export default function Hero({ locale = "en" }: { locale?: Locale }) {
+  const t = getMarketingDictionary(locale).hero;
 
-export default function Hero() {
   return (
     <section className="mx-auto w-full max-w-6xl px-6 pt-10 pb-20">
       <div className="grid items-center gap-14 lg:grid-cols-2">
         <div>
           <span className="inline-block rounded-full border border-lp-forest/15 bg-white/60 px-4 py-1.5 text-xs font-medium tracking-wide text-lp-forest-light uppercase">
-            Buying your first piece of land?
+            {t.eyebrow}
           </span>
 
           <h1 className="mt-6 text-4xl leading-tight font-bold tracking-tight text-lp-ink sm:text-5xl">
-            Don&apos;t buy land you can&apos;t build on.
+            {t.headline}
           </h1>
 
-          <p className="mt-5 max-w-xl text-lg text-stone-600">
-            Paste the address. In 60 seconds we&apos;ll pull the parcel&apos;s FEMA flood zone, its
-            wetlands status, and how the county is trending — straight from government records. Then
-            we&apos;ll tell you plainly what still needs a human to check.
-          </p>
+          <p className="mt-5 max-w-xl text-lg text-stone-600">{t.subhead}</p>
 
           <div className="mt-8">
-            <AddressCheckForm />
+            <AddressCheckForm locale={locale} />
           </div>
 
           <p className="mt-4 text-sm text-stone-500">
-            Built for first-time land buyers — not professional investors.{" "}
+            {t.builtFor}{" "}
             <Link href="/login" className="font-medium text-lp-forest-light hover:underline">
-              Sign in
+              {t.signIn}
             </Link>
           </p>
 
@@ -45,19 +38,19 @@ export default function Hero() {
           <dl className="mt-12 grid grid-cols-3 gap-6 border-t border-lp-border pt-6">
             <div>
               <dt className="flex items-center gap-1.5 text-xs font-medium text-stone-500">
-                <Wallet size={14} /> Cost
+                <Wallet size={14} /> {t.stats.cost}
               </dt>
-              <dd className="mt-1 text-2xl font-bold text-lp-ink">Free</dd>
+              <dd className="mt-1 text-2xl font-bold text-lp-ink">{t.stats.costValue}</dd>
             </div>
             <div>
               <dt className="flex items-center gap-1.5 text-xs font-medium text-stone-500">
-                <LockOpen size={14} /> Account
+                <LockOpen size={14} /> {t.stats.account}
               </dt>
-              <dd className="mt-1 text-2xl font-bold text-lp-ink">Not needed</dd>
+              <dd className="mt-1 text-2xl font-bold text-lp-ink">{t.stats.accountValue}</dd>
             </div>
             <div>
               <dt className="flex items-center gap-1.5 text-xs font-medium text-stone-500">
-                <Database size={14} /> Sources
+                <Database size={14} /> {t.stats.sources}
               </dt>
               <dd className="mt-1 text-2xl font-bold text-lp-ink">FEMA · USFWS · Census</dd>
             </div>
@@ -70,11 +63,11 @@ export default function Hero() {
         <div className="relative overflow-hidden rounded-3xl bg-lp-forest p-8 text-lp-cream shadow-xl">
           <TopoPattern />
           <div className="relative z-10">
-            <p className="text-xs font-medium tracking-wide text-lp-mint/70 uppercase">Sample check</p>
-            <p className="mt-1 text-sm text-lp-mint/60">9000 Example Ave, Tampa, FL</p>
+            <p className="text-xs font-medium tracking-wide text-lp-mint/70 uppercase">{t.sampleLabel}</p>
+            <p className="mt-1 text-sm text-lp-mint/60">{t.sampleAddress}</p>
 
             <div className="mt-6 space-y-4">
-              {SAMPLE_FINDINGS.map((finding) => (
+              {t.findings.map((finding) => (
                 <div key={finding.label} className="flex items-start gap-3">
                   {finding.tone === "alert" ? (
                     <AlertTriangle size={16} className="mt-0.5 shrink-0 text-lp-gold" />
@@ -90,9 +83,7 @@ export default function Hero() {
             </div>
 
             <div className="mt-6 border-t border-white/10 pt-4">
-              <p className="text-xs text-lp-mint/50">
-                Still needs a human: perc test, legal access, zoning, title.
-              </p>
+              <p className="text-xs text-lp-mint/50">{t.stillNeedsHuman}</p>
             </div>
           </div>
         </div>
