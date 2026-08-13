@@ -36,10 +36,10 @@ export interface NotCheckedItem {
 export function notCheckedItems(locale: Locale): NotCheckedItem[] {
   const items: { label: Bilingual; detail: Bilingual; guideSlug?: string }[] = [
     {
-      label: { en: "Septic / perc test", es: "Séptico / perc test" },
+      label: { en: "The actual perc test result", es: "El resultado real del perc test" },
       detail: {
-        en: "Whether the soil will pass a percolation test can only be answered by an actual test on the lot. No public dataset has this.",
-        es: "Si el suelo pasa una prueba de percolación solo se sabe haciendo la prueba en el lote. No hay base de datos pública que lo tenga.",
+        en: "We rate the soil above from the USDA survey, which is mapped by area rather than measured at your drain-field location. Only a test dug on the lot produces the number the county will permit against.",
+        es: "Arriba calificamos el suelo con el estudio del USDA, que está mapeado por zonas y no medido en el punto exacto de tu campo de drenaje. Solo una prueba hecha en el lote da el número contra el que el condado emite el permiso.",
       },
       guideSlug: "perc-test",
     },
@@ -325,6 +325,85 @@ function growthFinding(population: number | null, employment: number | null, loc
   };
 }
 
+/**
+ * The most consequential finding we produce, and the one most easily overstated. SSURGO is a
+ * survey mapped at map-unit scale, so it predicts what a perc test will find rather than
+ * measuring it — and a favourable rating is deliberately never rendered as `clear`, because a
+ * buyer who reads "you're fine" and skips the test is exactly who this could hurt. `ratedPercent`
+ * is shown so the reader can see how much of the map unit the rating actually describes.
+ */
+function septicSoilFinding(soil: PropertyLookupResult["septicSoil"], locale: Locale): Finding {
+  const base = {
+    id: "septic-soil",
+    label: pick({ en: "Soil for a septic drain field", es: "Suelo para campo de drenaje séptico" }, locale),
+    guideSlug: "perc-test",
+  };
+
+  if (!soil) {
+    return {
+      ...base,
+      status: "unknown",
+      detail: pick(
+        {
+          en: "The USDA soil survey has no drain-field rating for this location.",
+          es: "El estudio de suelos del USDA no tiene calificación de campo de drenaje para esta ubicación.",
+        },
+        locale
+      ),
+    };
+  }
+
+  const context = [soil.dominantSoil && `${soil.dominantSoil} series`, soil.drainageClass]
+    .filter(Boolean)
+    .join(", ");
+  const contextEs = [soil.dominantSoil && `serie ${soil.dominantSoil}`, soil.drainageClass]
+    .filter(Boolean)
+    .join(", ");
+
+  if (soil.rating === "very limited") {
+    return {
+      ...base,
+      status: "alert",
+      detail: pick(
+        {
+          en: `USDA rates the soil across ${soil.ratedPercent}% of this map unit "very limited" for septic drain fields (${context}). That's a strong signal a conventional perc test would struggle here. If there's no sewer, budget for an engineered alternative system, and make any offer contingent on a passing test — this rating predicts the outcome, it doesn't replace the test.`,
+          es: `El USDA califica el suelo del ${soil.ratedPercent}% de esta unidad como "muy limitado" para campos de drenaje séptico (${contextEs}). Es una señal fuerte de que un perc test convencional tendría problemas aquí. Si no hay alcantarillado, presupuesta un sistema alternativo de ingeniería y haz tu oferta contingente a que apruebe la prueba — esta calificación predice el resultado, no lo sustituye.`,
+        },
+        locale
+      ),
+    };
+  }
+
+  if (soil.rating === "somewhat limited") {
+    return {
+      ...base,
+      status: "caution",
+      detail: pick(
+        {
+          en: `USDA rates the soil across ${soil.ratedPercent}% of this map unit "somewhat limited" for septic drain fields (${context}). Workable in many cases, but expect the design to have to account for it. Still order a perc test before you close.`,
+          es: `El USDA califica el suelo del ${soil.ratedPercent}% de esta unidad como "algo limitado" para campos de drenaje séptico (${contextEs}). En muchos casos es viable, pero espera que el diseño tenga que compensarlo. Aun así, haz el perc test antes de cerrar.`,
+        },
+        locale
+      ),
+    };
+  }
+
+  // "Not limited" stays at `caution`, not `clear`. A map-unit survey saying the soil is
+  // favourable is genuinely good news, but rendering it as a pass invites someone to skip the
+  // test that actually governs whether they can build.
+  return {
+    ...base,
+    status: "caution",
+    detail: pick(
+      {
+        en: `USDA rates the soil across ${soil.ratedPercent}% of this map unit "not limited" for septic drain fields (${context}) — favourable, and better than most rural parcels. It still isn't a perc test: the survey maps areas, not your specific drain-field location, so the county will want the real thing.`,
+        es: `El USDA califica el suelo del ${soil.ratedPercent}% de esta unidad como "sin limitaciones" para campos de drenaje séptico (${contextEs}) — favorable, y mejor que la mayoría de los lotes rurales. Aun así no es un perc test: el estudio mapea zonas, no el punto exacto de tu campo de drenaje, y el condado va a pedir la prueba real.`,
+      },
+      locale
+    ),
+  };
+}
+
 function amenitiesFinding(count: number | null, locale: Locale): Finding {
   const base = { id: "amenities", label: pick({ en: "Nearby services", es: "Servicios cercanos" }, locale) };
 
@@ -372,6 +451,7 @@ function amenitiesFinding(count: number | null, locale: Locale): Finding {
 export function buildFindings(lookup: PropertyLookupResult, locale: Locale = "en"): Finding[] {
   return [
     floodZoneFinding(lookup.femaFloodZone, locale),
+    septicSoilFinding(lookup.septicSoil, locale),
     wetlandsFinding(lookup.wetlandsPresent, locale),
     hazardFinding(lookup.naturalHazardExposure, locale),
     growthFinding(lookup.populationGrowthRatePercent, lookup.employmentGrowthRatePercent, locale),

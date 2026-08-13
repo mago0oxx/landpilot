@@ -4,6 +4,7 @@ import { lookupFloodZone } from "@/lib/data-sources/femaFloodZone";
 import { lookupNaturalHazardExposure } from "@/lib/data-sources/femaRiskIndex";
 import { lookupHillsboroughParcel } from "@/lib/data-sources/hillsboroughParcel";
 import { lookupNearbyAmenitiesCount } from "@/lib/data-sources/osmNearbyAmenities";
+import { lookupSepticSoilSuitability, SoilSepticResult } from "@/lib/data-sources/nrcsSoilSeptic";
 import { lookupWetlandsPresent } from "@/lib/data-sources/usfwsWetlands";
 
 interface CensusGeography {
@@ -38,6 +39,9 @@ export interface PropertyLookupResult {
   wetlandsPresent: boolean | null;
   naturalHazardExposure: HazardExposure | null;
   nearbyAmenitiesCount: number | null;
+  /** USDA soil rating for a septic drain field — the best available signal on whether a perc
+   * test is likely to pass. Null outside surveyed areas or when the map unit isn't rated. */
+  septicSoil: SoilSepticResult | null;
 }
 
 export const EMPTY_LOOKUP_RESULT: PropertyLookupResult = {
@@ -51,6 +55,7 @@ export const EMPTY_LOOKUP_RESULT: PropertyLookupResult = {
   wetlandsPresent: null,
   naturalHazardExposure: null,
   nearbyAmenitiesCount: null,
+  septicSoil: null,
 };
 
 /** True when the address didn't geocode at all — every field is null and there's nothing to show. */
@@ -115,6 +120,7 @@ export async function lookupProperty(address: string): Promise<PropertyLookupRes
     wetlandsPresent,
     naturalHazardExposure,
     nearbyAmenitiesCount,
+    septicSoil,
   ] = await Promise.all([
     hasCoordinates ? lookupFloodZone(lat, lng) : Promise.resolve(null),
     county?.toLowerCase() === "hillsborough" ? lookupHillsboroughParcel(trimmed) : Promise.resolve(null),
@@ -123,6 +129,7 @@ export async function lookupProperty(address: string): Promise<PropertyLookupRes
     hasCoordinates ? lookupWetlandsPresent(lat, lng) : Promise.resolve(null),
     stateFips && countyFips ? lookupNaturalHazardExposure(stateFips, countyFips) : Promise.resolve(null),
     hasCoordinates ? lookupNearbyAmenitiesCount(lat, lng) : Promise.resolve(null),
+    hasCoordinates ? lookupSepticSoilSuitability(lat, lng) : Promise.resolve(null),
   ]);
 
   return {
@@ -136,5 +143,6 @@ export async function lookupProperty(address: string): Promise<PropertyLookupRes
     wetlandsPresent,
     naturalHazardExposure,
     nearbyAmenitiesCount,
+    septicSoil,
   };
 }

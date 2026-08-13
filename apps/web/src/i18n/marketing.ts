@@ -25,7 +25,7 @@ export interface MarketingDictionary {
     sampleLabel: string;
     sampleAddress: string;
     stillNeedsHuman: string;
-    stats: { cost: string; costValue: string; account: string; accountValue: string; sources: string };
+    stats: { cost: string; costValue: string; account: string; accountValue: string; sources: string; sourcesValue: string };
     findings: { label: string; detail: string; tone: "alert" | "clear" }[];
   };
   addressForm: {
@@ -90,7 +90,7 @@ const en: MarketingDictionary = {
     eyebrow: "Buying your first piece of land?",
     headline: "Don't buy land you can't build on.",
     subhead:
-      "Paste the address. In 60 seconds we'll pull the parcel's FEMA flood zone, its wetlands status, and how the county is trending — straight from government records. Then we'll tell you plainly what still needs a human to check.",
+      "Paste the address. In 60 seconds we'll pull the parcel's FEMA flood zone, whether the USDA rates its soil fit for a septic drain field, and how the county is trending — straight from government records. Then we'll tell you plainly what still needs a human to check.",
     builtFor: "Built for first-time land buyers — not professional investors.",
     signIn: "Sign in",
     sampleLabel: "Sample check",
@@ -102,9 +102,11 @@ const en: MarketingDictionary = {
       account: "Account",
       accountValue: "Not needed",
       sources: "Sources",
+      sourcesValue: "FEMA · USDA · Census",
     },
     findings: [
       { label: "FEMA flood zone", tone: "alert", detail: "Zone AE — high risk. Flood insurance required with a federal mortgage." },
+      { label: "Soil for septic", tone: "alert", detail: "USDA rates it very limited for drain fields. Perc test likely to struggle." },
       { label: "Wetlands", tone: "clear", detail: "None mapped on this parcel in the USFWS inventory." },
       { label: "County population & jobs", tone: "clear", detail: "Census ACS: population +1.6%, employment +2.4%." },
       { label: "Nearby services", tone: "clear", detail: "66 mapped shops, schools and healthcare nearby." },
@@ -116,7 +118,7 @@ const en: MarketingDictionary = {
     ariaLabel: "Property address",
     checking: "Checking...",
     disclaimer:
-      "No account needed. Pulls FEMA flood maps, the federal wetlands inventory and Census data for the parcel.",
+      "No account needed. Pulls FEMA flood maps, the USDA soil survey, the federal wetlands inventory and Census data for the parcel.",
     genericError: "Something went wrong checking that address. Try again.",
     networkError: "Couldn't reach the server. Check your connection and try again.",
     tooShort: "Enter the full address, including city and state — e.g. 123 Main St, Tampa, FL.",
@@ -133,7 +135,7 @@ const en: MarketingDictionary = {
       {
         title: "We pull the real data",
         description:
-          "Flood zones, wetlands, parcel records, and county trends are fetched from FEMA, USFWS, Census and county GIS — not guessed.",
+          "Flood zones, soil ratings, wetlands, parcel records and county trends are fetched from FEMA, USDA, USFWS, Census and county GIS — not guessed.",
       },
       {
         title: "You get findings, and the gaps",
@@ -209,7 +211,7 @@ const es: MarketingDictionary = {
     eyebrow: "¿Vas a comprar tu primer terreno en Estados Unidos?",
     headline: "No compres un terreno donde no puedas construir.",
     subhead:
-      "Pega la dirección. En 60 segundos sacamos la zona de inundación de FEMA, si hay humedales en la parcela y cómo viene creciendo el condado — directo de los registros del gobierno. Y después te decimos claro qué falta que revise una persona.",
+      "Pega la dirección. En 60 segundos sacamos la zona de inundación de FEMA, si el USDA califica su suelo apto para un campo de drenaje séptico y cómo viene creciendo el condado — directo de los registros del gobierno. Y después te decimos claro qué falta que revise una persona.",
     builtFor: "Hecho para quien compra su primer terreno en EE.UU., no para inversionistas profesionales.",
     signIn: "Entrar",
     sampleLabel: "Ejemplo de verificación",
@@ -221,9 +223,11 @@ const es: MarketingDictionary = {
       account: "Cuenta",
       accountValue: "No hace falta",
       sources: "Fuentes",
+      sourcesValue: "FEMA · USDA · Census",
     },
     findings: [
       { label: "Zona de inundación FEMA", tone: "alert", detail: "Zona AE — riesgo alto. Con hipoteca federal, el seguro de inundación es obligatorio." },
+      { label: "Suelo para séptico", tone: "alert", detail: "El USDA lo califica muy limitado para drenaje. El perc test batallaría." },
       { label: "Humedales", tone: "clear", detail: "El inventario del USFWS no marca humedales en esta parcela." },
       { label: "Población y empleo del condado", tone: "clear", detail: "Census ACS: población +1.6%, empleo +2.4%." },
       { label: "Servicios cercanos", tone: "clear", detail: "66 comercios, escuelas y centros de salud mapeados alrededor." },
@@ -235,7 +239,7 @@ const es: MarketingDictionary = {
     ariaLabel: "Dirección de la propiedad",
     checking: "Verificando...",
     disclaimer:
-      "Sin cuenta. Consulta los mapas de inundación de FEMA, el inventario federal de humedales y datos del Census para la parcela.",
+      "Sin cuenta. Consulta los mapas de inundación de FEMA, el estudio de suelos del USDA, el inventario federal de humedales y datos del Census para la parcela.",
     genericError: "Algo falló al verificar esa dirección. Inténtalo de nuevo.",
     networkError: "No pudimos conectar con el servidor. Revisa tu conexión e inténtalo de nuevo.",
     tooShort: "Escribe la dirección completa, con ciudad y estado — por ejemplo 123 Main St, Tampa, FL.",
@@ -252,7 +256,7 @@ const es: MarketingDictionary = {
       {
         title: "Buscamos los datos reales",
         description:
-          "Zonas de inundación, humedales, registro de la parcela y tendencias del condado, sacados de FEMA, USFWS, el Census y el GIS del condado. No son estimaciones.",
+          "Zonas de inundación, calificación del suelo, humedales, registro de la parcela y tendencias del condado, sacados de FEMA, USDA, USFWS, el Census y el GIS del condado. No son estimaciones.",
       },
       {
         title: "Te damos los hallazgos y los huecos",

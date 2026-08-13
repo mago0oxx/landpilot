@@ -18,7 +18,7 @@ const COPY = {
   en: {
     eyebrow: "Free address check",
     sourceNote:
-      "Everything below comes from FEMA, the US Fish & Wildlife Service, and the US Census Bureau — public records for this parcel, not estimates.",
+      "Everything below comes from FEMA, the USDA soil survey, the US Fish & Wildlife Service, and the US Census Bureau — public records for this parcel, not estimates.",
     parcelFolio: "County parcel folio",
     onRecord: "sqft on record",
     cantTellTitle: "What this check can't tell you",
@@ -38,7 +38,7 @@ const COPY = {
   es: {
     eyebrow: "Verificación gratis de dirección",
     sourceNote:
-      "Todo lo de abajo viene de FEMA, el US Fish & Wildlife Service y el US Census Bureau — registros públicos de esta parcela, no estimaciones.",
+      "Todo lo de abajo viene de FEMA, el estudio de suelos del USDA, el US Fish & Wildlife Service y el US Census Bureau — registros públicos de esta parcela, no estimaciones.",
     parcelFolio: "Folio de la parcela en el condado",
     onRecord: "sqft en el registro",
     cantTellTitle: "Lo que esta verificación no te puede decir",

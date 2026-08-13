@@ -52,7 +52,7 @@ export default function Hero({ locale = "en" }: { locale?: Locale }) {
               <dt className="flex items-center gap-1.5 text-xs font-medium text-stone-500">
                 <Database size={14} /> {t.stats.sources}
               </dt>
-              <dd className="mt-1 text-2xl font-bold text-lp-ink">FEMA · USFWS · Census</dd>
+              <dd className="mt-1 text-2xl font-bold text-lp-ink">{t.stats.sourcesValue}</dd>
             </div>
           </dl>
         </div>
