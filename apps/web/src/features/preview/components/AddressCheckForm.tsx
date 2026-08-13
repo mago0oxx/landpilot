@@ -26,7 +26,14 @@ export default function AddressCheckForm({
 
   async function handleSubmit(event: FormEvent) {
     event.preventDefault();
-    if (!address.trim()) return;
+
+    // Validate on submit rather than by disabling the button. A greyed-out primary CTA is the
+    // first thing a visitor sees — an empty field is the default state — and a dead-looking
+    // button stops people from typing at all. Better to look clickable and explain the problem.
+    if (address.trim().length < 6) {
+      setError(t.tooShort);
+      return;
+    }
 
     setIsSubmitting(true);
     setError(undefined);
@@ -71,8 +78,8 @@ export default function AddressCheckForm({
         />
         <button
           type="submit"
-          disabled={isSubmitting || address.trim().length < 6}
-          className="inline-flex shrink-0 items-center justify-center gap-2 rounded-xl bg-lp-gold px-6 py-3.5 text-sm font-medium text-lp-gold-ink transition hover:brightness-105 disabled:cursor-not-allowed disabled:opacity-50"
+          disabled={isSubmitting}
+          className="inline-flex shrink-0 items-center justify-center gap-2 rounded-xl bg-lp-gold px-6 py-3.5 text-sm font-medium text-lp-gold-ink transition hover:brightness-105 disabled:cursor-wait disabled:opacity-70"
         >
           {isSubmitting ? (
             <>

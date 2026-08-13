@@ -10,7 +10,9 @@ import CTAFooter from "@/features/marketing/components/CTAFooter";
 import MarketingFooter from "@/features/marketing/components/MarketingFooter";
 
 export const metadata: Metadata = {
-  title: "LandPilot — Revisa un terreno en EE.UU. antes de comprarlo",
+  // `absolute` skips the root layout's "%s — LandPilot" template, which would otherwise
+  // append a second "— LandPilot" to a title that already names the product.
+  title: { absolute: "LandPilot — Revisa un terreno en EE.UU. antes de comprarlo" },
   description:
     "Pega la dirección de un lote en Estados Unidos y consulta gratis su zona de inundación FEMA, humedales y datos del condado. Sin cuenta.",
   alternates: {

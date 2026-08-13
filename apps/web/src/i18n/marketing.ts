@@ -36,6 +36,7 @@ export interface MarketingDictionary {
     disclaimer: string;
     genericError: string;
     networkError: string;
+    tooShort: string;
   };
   howItWorks: {
     title: string;
@@ -118,6 +119,7 @@ const en: MarketingDictionary = {
       "No account needed. Pulls FEMA flood maps, the federal wetlands inventory and Census data for the parcel.",
     genericError: "Something went wrong checking that address. Try again.",
     networkError: "Couldn't reach the server. Check your connection and try again.",
+    tooShort: "Enter the full address, including city and state — e.g. 123 Main St, Tampa, FL.",
   },
   howItWorks: {
     title: "How it works",
@@ -236,6 +238,7 @@ const es: MarketingDictionary = {
       "Sin cuenta. Consulta los mapas de inundación de FEMA, el inventario federal de humedales y datos del Census para la parcela.",
     genericError: "Algo falló al verificar esa dirección. Inténtalo de nuevo.",
     networkError: "No pudimos conectar con el servidor. Revisa tu conexión e inténtalo de nuevo.",
+    tooShort: "Escribe la dirección completa, con ciudad y estado — por ejemplo 123 Main St, Tampa, FL.",
   },
   howItWorks: {
     title: "Cómo funciona",

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import MarketingFooter from "@/features/marketing/components/MarketingFooter";
 import MarketingNav from "@/features/marketing/components/MarketingNav";
+import { EN_TO_ES_GUIDE } from "@/features/marketing/data/guides.es";
 import FindingRow from "@/features/preview/components/FindingRow";
 import { buildFindings, headlineFor, notCheckedItems } from "@/features/preview/services/findings";
 import { Locale } from "@/i18n/config";
@@ -69,9 +70,13 @@ export default function CheckResult({ preview, locale, altHref }: CheckResultPro
   const headline = headlineFor(findings, locale);
   const location = [preview.county && t.county(preview.county), preview.state].filter(Boolean).join(", ");
 
-  // Guides are English-only for now. Rather than silently sending a Spanish reader to an
-  // English page, Spanish rows drop the link until a translated guide exists.
-  const guideHrefFor = (slug: string) => (locale === "es" ? null : `/guides/${slug}`);
+  // Findings reference English guide slugs. In Spanish, link only where a Spanish guide
+  // actually exists — otherwise render no link rather than sending the reader to English.
+  const guideHrefFor = (slug: string) => {
+    if (locale !== "es") return `/guides/${slug}`;
+    const esSlug = EN_TO_ES_GUIDE[slug];
+    return esSlug ? `/es/guias/${esSlug}` : null;
+  };
 
   return (
     <div className="bg-lp-cream">
