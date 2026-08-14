@@ -42,7 +42,19 @@ export interface PropertyLookupResult {
   /** USDA soil rating for a septic drain field — the best available signal on whether a perc
    * test is likely to pass. Null outside surveyed areas or when the map unit isn't rated. */
   septicSoil: SoilSepticResult | null;
+  /** Geocoded centroid of the address. Not the parcel boundary — it's where the address
+   * resolves to, which is what lets us render imagery centred on the lot. */
+  latitude: number | null;
+  longitude: number | null;
 }
+
+/**
+ * Bump whenever a data source is added, removed, or changed shape. Cached lookups carry the
+ * version they were captured under, and a mismatch forces a fresh fetch — otherwise every
+ * address checked before a new source shipped would keep returning the old, incomplete result
+ * until the cache aged out.
+ */
+export const LOOKUP_VERSION = 3;
 
 export const EMPTY_LOOKUP_RESULT: PropertyLookupResult = {
   county: null,
@@ -56,11 +68,27 @@ export const EMPTY_LOOKUP_RESULT: PropertyLookupResult = {
   naturalHazardExposure: null,
   nearbyAmenitiesCount: null,
   septicSoil: null,
+  latitude: null,
+  longitude: null,
 };
 
 /** True when the address didn't geocode at all — every field is null and there's nothing to show. */
 export function isEmptyLookup(result: PropertyLookupResult): boolean {
   return result.county === null && result.state === null && result.femaFloodZone === null;
+}
+
+/**
+ * True when the address resolved but at least one coordinate-based source came back empty.
+ * Those are usually transient (an upstream timeout), and caching them for the full window
+ * means one bad moment makes a parcel look unknowable for a month.
+ */
+export function hasPartialFailures(result: PropertyLookupResult): boolean {
+  return (
+    result.femaFloodZone === null ||
+    result.wetlandsPresent === null ||
+    result.septicSoil === null ||
+    result.nearbyAmenitiesCount === null
+  );
 }
 
 /**
@@ -144,5 +172,7 @@ export async function lookupProperty(address: string): Promise<PropertyLookupRes
     naturalHazardExposure,
     nearbyAmenitiesCount,
     septicSoil,
+    latitude: lat ?? null,
+    longitude: lng ?? null,
   };
 }

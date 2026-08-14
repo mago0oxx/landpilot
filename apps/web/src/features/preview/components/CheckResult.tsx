@@ -3,6 +3,7 @@ import MarketingFooter from "@/features/marketing/components/MarketingFooter";
 import MarketingNav from "@/features/marketing/components/MarketingNav";
 import { EN_TO_ES_GUIDE } from "@/features/marketing/data/guides.es";
 import FindingRow from "@/features/preview/components/FindingRow";
+import ParcelImagery from "@/features/preview/components/ParcelImagery";
 import { buildFindings, headlineFor, notCheckedItems } from "@/features/preview/services/findings";
 import { Locale } from "@/i18n/config";
 import { PropertyLookupResult } from "@/lib/propertyLookup";
@@ -106,6 +107,15 @@ export default function CheckResult({ preview, locale, altHref }: CheckResultPro
               : ""}
           </p>
         )}
+
+        {/* Sits after the findings so the flood polygon lands on someone who has just read
+            what "Zone AE" means, rather than before they have any context for it. */}
+        <ParcelImagery
+          latitude={preview.lookup.latitude}
+          longitude={preview.lookup.longitude}
+          lotSizeSqft={preview.lookup.lotSizeSqft}
+          locale={locale}
+        />
 
         <section className="mt-12">
           <h2 className="text-lg font-semibold text-lp-ink">{t.cantTellTitle}</h2>

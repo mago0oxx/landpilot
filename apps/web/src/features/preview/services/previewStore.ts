@@ -1,6 +1,12 @@
 import { createHash } from "crypto";
 import { Prisma } from "@prisma/client";
-import { isEmptyLookup, lookupProperty, PropertyLookupResult } from "@/lib/propertyLookup";
+import {
+  hasPartialFailures,
+  isEmptyLookup,
+  LOOKUP_VERSION,
+  lookupProperty,
+  PropertyLookupResult,
+} from "@/lib/propertyLookup";
 import { prisma } from "@/lib/prisma";
 
 /** Free checks allowed per IP per hour. Generous for a real buyer comparing lots, tight
@@ -10,6 +16,11 @@ const RATE_LIMIT_PER_HOUR = 12;
 /** How long a cached lookup for the same address stays fresh. Flood maps and ACS figures
  * move on a scale of years, so this is about API politeness, not data staleness. */
 const CACHE_TTL_DAYS = 30;
+
+/** A lookup where some source came back empty is probably a transient upstream failure, so it
+ * gets a short window rather than the full one — the next visitor retries instead of inheriting
+ * a month-old "couldn't check". */
+const PARTIAL_CACHE_TTL_HOURS = 6;
 
 export class PreviewRateLimitError extends Error {
   constructor() {
@@ -48,16 +59,34 @@ async function assertUnderRateLimit(ipHash: string | null): Promise<void> {
   if (recent >= RATE_LIMIT_PER_HOUR) throw new PreviewRateLimitError();
 }
 
-/** Reuses a recent lookup for the same address instead of re-querying six external APIs. */
+/** The stored blob is a PropertyLookupResult plus the version it was captured under. */
+type CachedLookup = PropertyLookupResult & { __lookupVersion?: number };
+
+/**
+ * Reuses a recent lookup for the same address instead of re-querying six external APIs.
+ * Two things disqualify a hit: a version older than the current set of data sources, and a
+ * partial result that has aged past the short window. Both exist because a cache keyed only on
+ * the address will happily serve a result captured before a source existed, or one captured
+ * during an upstream outage — and the visitor has no way to tell.
+ */
 async function findCachedLookup(addressKey: string): Promise<PropertyLookupResult | null> {
   const since = new Date(Date.now() - CACHE_TTL_DAYS * 24 * 60 * 60 * 1000);
   const cached = await prisma.landPreview.findFirst({
     where: { addressKey, createdAt: { gte: since } },
     orderBy: { createdAt: "desc" },
-    select: { lookup: true },
+    select: { lookup: true, createdAt: true },
   });
+  if (!cached) return null;
 
-  return cached ? (cached.lookup as unknown as PropertyLookupResult) : null;
+  const lookup = cached.lookup as unknown as CachedLookup;
+  if (lookup.__lookupVersion !== LOOKUP_VERSION) return null;
+
+  if (hasPartialFailures(lookup)) {
+    const partialCutoff = Date.now() - PARTIAL_CACHE_TTL_HOURS * 60 * 60 * 1000;
+    if (cached.createdAt.getTime() < partialCutoff) return null;
+  }
+
+  return lookup;
 }
 
 export async function createPreview(address: string, ip: string | null) {
@@ -77,7 +106,11 @@ export async function createPreview(address: string, ip: string | null) {
       addressKey,
       county: lookup.county,
       state: lookup.state,
-      lookup: JSON.parse(JSON.stringify(lookup)) as Prisma.InputJsonValue,
+      // Version travels with the blob so a future data source invalidates old entries without
+      // needing a schema migration.
+      lookup: JSON.parse(
+        JSON.stringify({ ...lookup, __lookupVersion: LOOKUP_VERSION })
+      ) as Prisma.InputJsonValue,
       ipHash,
     },
     select: { id: true },
